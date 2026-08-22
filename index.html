@@ -157,6 +157,8 @@
                     <button onclick="switchPhase('memorize')" id="nav-memorize" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-book-open mr-1 hidden md:inline"></i>Memorize</button>
                     <button onclick="switchPhase('recall')" id="nav-recall" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-gamepad mr-1 hidden md:inline"></i>Recall</button>
                     <button onclick="switchPhase('exam')" id="nav-exam" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-pen-clip mr-1 hidden md:inline"></i>Exam</button>
+                    <button onclick="switchPhase('pengembang')" id="nav-pengembang" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-user-tie mr-1 hidden md:inline"></i>Pengembang</button>
+                    <button onclick="switchPhase('sumber')" id="nav-sumber" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-link mr-1 hidden md:inline"></i>Sumber</button>
                 </div>
             </div>
         </div>
@@ -536,6 +538,11 @@
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="studentClass">Kelas</label>
                     <input class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="studentClass" type="text" placeholder="Contoh: VIII A">
                 </div>
+
+                <div class="mb-6 text-left">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="studentSchool">Nama Sekolah</label>
+                    <input class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="studentSchool" type="text" placeholder="Contoh: SMP Negeri 2 Ende">
+                </div>
                 
                 <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left text-xs text-yellow-800">
                     <p><strong>Info:</strong> Pastikan Anda terkoneksi internet. Nilai akan otomatis dikirimkan ke Google Spreadsheet Guru setelah selesai ujian. <strong>Ujian hanya dapat dilakukan 1 kali.</strong></p>
@@ -588,6 +595,97 @@
                 <button onclick="location.reload()" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-6 rounded-lg transition-colors">Kembali ke Beranda</button>
             </div>
 
+        </section>
+
+        <!-- PENGEMBANG PHASE -->
+        <section id="phase-pengembang" class="phase-section">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="font-display text-3xl text-dark text-center mb-8">Profil Pengembang</h2>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden border-t-4 border-accent">
+                    <div class="bg-blue-50 p-8 text-center border-b border-blue-100">
+                        <img src="https://www.image2url.com/r2/default/images/1787417552216-3f3fe7e5-bc7b-4da1-b496-4ca3d251d6ed.png" alt="Danar Wulan, S.Si" class="w-28 h-28 object-cover bg-white border-4 border-accent rounded-full mx-auto mb-4 shadow-md">
+                        <h3 class="font-display text-2xl text-dark">Danar Wulan, S.Si</h3>
+                        <p class="text-accent font-semibold mt-1">Guru IPA - SMP Negeri 2 Ende</p>
+                        <p class="text-sm text-gray-500 mt-2">NIP: 198508152017081001</p>
+                    </div>
+                    
+                    <div class="p-6 md:p-10 space-y-8">
+                        <div>
+                            <h4 class="text-lg font-bold text-dark border-b-2 border-gray-100 pb-2 mb-4 flex items-center"><i class="fa-solid fa-bullseye text-accent mr-3"></i> Profil Professional</h4>
+                            <p class="text-gray-700 text-sm leading-relaxed">Pendidik IPA di SMP Negeri 2 Ende yang berfokus pada inovasi pedagogi dan integrasi teknologi dalam pembelajaran.</p>
+                        </div>
+
+                        <div>
+                            <h4 class="text-lg font-bold text-dark border-b-2 border-gray-100 pb-2 mb-4 flex items-center"><i class="fa-solid fa-certificate text-secondary mr-3"></i> Sertifikasi & Keahlian Digital</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm space-y-2">
+                                <li>Google Certified Trainer</li>
+                                <li>Gemini Certified Educator</li>
+                                <li>Trainer Resmi Quizizz & Wayground</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 class="text-lg font-bold text-dark border-b-2 border-gray-100 pb-2 mb-4 flex items-center"><i class="fa-solid fa-route text-primary mr-3"></i> Rekam Jejak Program & Mentorship</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm space-y-2">
+                                <li>Pengajar Praktik – Program Guru Penggerak (Angkatan 10)</li>
+                                <li>Guru Penggerak – Program Guru Penggerak (Angkatan 3)</li>
+                                <li>Mentor Digital – Google Certified Educator Level 1 & Level 2</li>
+                                <li>Mentor KSRG – Kandidat Sekolah Rujukan Google</li>
+                                <li>Pendamping Satuan Pendidikan – Akselerasi Pemfokusan Pembelajaran</li>
+                                <li>Sahabat Rumah Belajar – Pemanfataan Portal Pembelajaran Kemendikbudristek</li>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h4 class="text-lg font-bold text-dark border-b-2 border-gray-100 pb-2 mb-4 flex items-center"><i class="fa-solid fa-trophy text-yellow-500 mr-3"></i> Prestasi & Penghargaan</h4>
+                            <ul class="list-disc list-inside text-gray-700 text-sm space-y-2">
+                                <li>Terbaik 1 Guru SMP Inovatif Tingkat Provinsi Nusa Tenggara Timur (NTT)</li>
+                                <li>Sahabat Rumah Belajar 2010</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                            <h4 class="text-lg font-bold text-dark mb-4 flex items-center"><i class="fa-regular fa-address-card text-accent mr-3"></i> Informasi Kontak</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+                                <div class="flex items-center"><i class="fa-solid fa-envelope w-6 text-gray-400"></i> danarwulan58@guru.smp.belajar.id</div>
+                                <div class="flex items-center"><i class="fa-brands fa-whatsapp w-6 text-green-500"></i> 082237142381</div>
+                                <div class="flex items-center"><i class="fa-solid fa-globe w-6 text-blue-500"></i> <a href="https://pagurudan.my.id" target="_blank" class="hover:underline hover:text-accent">pagurudan.my.id</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SUMBER PHASE -->
+        <section id="phase-sumber" class="phase-section">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="font-display text-3xl text-dark text-center mb-8">Sumber Materi Pembelajaran</h2>
+                
+                <div class="bg-white rounded-xl shadow-lg p-8 border-t-4 border-secondary">
+                    <p class="text-gray-600 mb-6 text-sm">Materi dan referensi yang digunakan dalam pengembangan media pembelajaran interaktif ini bersumber dari tautan berikut:</p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <i class="fa-solid fa-link text-secondary"></i>
+                            </div>
+                            <div class="ml-3">
+                                <a href="https://www.ruangguru.com/blog/medan-listrik-fisika-smp-kelas-9" target="_blank" class="text-accent hover:underline font-medium text-sm break-all">https://www.ruangguru.com/blog/medan-listrik-fisika-smp-kelas-9</a>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <i class="fa-solid fa-link text-secondary"></i>
+                            </div>
+                            <div class="ml-3">
+                                <a href="https://buku.kemendikdasmen.go.id/katalog/ilmu-pengetahuan-alam-untuk-smp-mts-kelas-viii-edisi-revisi" target="_blank" class="text-accent hover:underline font-medium text-sm break-all">https://buku.kemendikdasmen.go.id/katalog/ilmu-pengetahuan-alam-untuk-smp-mts-kelas-viii-edisi-revisi</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -898,12 +996,15 @@
         let timeElapsed = 0;
         let studentName = "";
         let studentClass = "";
+        let studentSchool = ""; // Tambahan variabel sekolah
 
         function startExam() {
             const nameInput = document.getElementById('studentName').value.trim();
             const classInput = document.getElementById('studentClass').value.trim();
-            if(!nameInput || !classInput) {
-                Swal.fire('Perhatian', 'Mohon masukkan Nama dan Kelas Anda terlebih dahulu!', 'warning');
+            const schoolInput = document.getElementById('studentSchool').value.trim();
+            
+            if(!nameInput || !classInput || !schoolInput) {
+                Swal.fire('Perhatian', 'Mohon lengkapi Nama, Kelas, dan Nama Sekolah Anda terlebih dahulu!', 'warning');
                 return;
             }
 
@@ -918,6 +1019,7 @@
 
             studentName = nameInput;
             studentClass = classInput;
+            studentSchool = schoolInput;
             document.getElementById('exam-intro').style.display = 'none';
             document.getElementById('exam-area').style.display = 'block';
             
@@ -1112,8 +1214,8 @@
                     let s = (timeElapsed % 60).toString().padStart(2, '0');
                     let durasiPengerjaan = `${m} Menit ${s} Detik`;
 
-                    // Kirim ke Google Sheet setelah animasi selesai (Kirim Nama, Kelas, Nilai, Waktu Pengerjaan)
-                    sendToGoogleSheet(studentName, studentClass, finalScore, durasiPengerjaan);
+                    // Kirim ke Google Sheet setelah animasi selesai (Kirim Nama, Kelas, Sekolah, Nilai, Waktu Pengerjaan)
+                    sendToGoogleSheet(studentName, studentClass, studentSchool, finalScore, durasiPengerjaan);
                 } else {
                     count++;
                     scoreDisplay.innerText = count;
@@ -1122,18 +1224,19 @@
         }
 
         // --- Fungsi Kirim Data Ke Google Sheet ---
-        function sendToGoogleSheet(nama, kelas, nilai, waktuPengerjaan) {
+        function sendToGoogleSheet(nama, kelas, sekolah, nilai, waktuPengerjaan) {
             // GANTI URL DI BAWAH DENGAN URL WEB APP GAS ANDA
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbxrUaw71psShmv7suXGoA8Ezq5UXAn-r4GCCpHQJfc5aJyPb_oE3gv2x5VksCt9aVca/exec'; 
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyjnt-bzngce2RQkv9UlmayDFasTaGDf4MeFlrW5eubFdjPg1pO36sinMIDR1f9Bg4i/exec'; 
             
             const statusBox = document.getElementById('sheet-status');
 
             const formData = new FormData();
             formData.append('Waktu', new Date().toLocaleString('id-ID'));
             formData.append('Nama', nama);
-            formData.append('Kelas', kelas); // Menambahkan Kelas
+            formData.append('Kelas', kelas); 
+            formData.append('Sekolah', sekolah); // Menambahkan Sekolah
             formData.append('Nilai', nilai);
-            formData.append('Waktu_Pengerjaan', waktuPengerjaan); // Menambahkan Waktu Pengerjaan (Durasi)
+            formData.append('Waktu_Pengerjaan', waktuPengerjaan);
 
             fetch(scriptURL, { method: 'POST', body: formData })
                 .then(response => {
