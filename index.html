@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Pencernaan Manusia - Kelas VIII</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert2 untuk Popup -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Fredoka One', 'cursive'],
+                    },
+                    colors: {
+                        primary: '#10B981', // Emerald 500
+                        secondary: '#F59E0B', // Amber 500
+                        accent: '#3B82F6', // Blue 500
+                        dark: '#1F2937', // Gray 800
+                        light: '#F3F4F6' // Gray 100
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f0fdf4;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2310b981' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            scroll-behavior: smooth;
+        }
+
+        .phase-section { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .phase-section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #059669; }
+
+        /* Memorize Styles */
+        .materi-card { transition: transform 0.3s; }
+        .materi-card:hover { transform: translateY(-5px); }
+
+        /* Drag & Drop Styles */
+        #dnd-container {
+            width: 100%;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        #dnd-image { width: 100%; height: auto; display: block; border-radius: 12px; }
+        .drop-zone {
+            width: 100%;
+            min-height: 42px;
+            border: 2px dashed #3B82F6;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1e3a8a;
+            transition: all 0.3s;
+        }
+        .drop-zone.hover { background: rgba(16, 185, 129, 0.2); border-color: #10B981; }
+        .drop-zone.filled { background: #10B981; border-color: #059669; color: white; border-style: solid; font-size: 0.9rem;}
+        .drop-zone.wrong { background: #EF4444; border-color: #B91C1C; color: white; animation: shake 0.5s; }
+
+        @keyframes shake {
+            0% { transform: translateX(0); } 25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); } 75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .draggable-item {
+            cursor: grab;
+            transition: transform 0.2s;
+            user-select: none;
+            touch-action: none; /* For mobile dragging */
+        }
+        .draggable-item:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable-item.dragging { opacity: 0.5; }
+        .draggable-item.hidden-item { display: none; }
+
+        /* Flashcard Styles */
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 280px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-radius: 1rem;
+        }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .flip-card-front { background-color: white; color: #1F2937; border: 2px solid #E5E7EB; }
+        .flip-card-back { background-color: #10B981; color: white; transform: rotateY(180deg); }
+
+        /* Checkbox & Radio Custom */
+        .exam-option input[type="radio"], .exam-option input[type="checkbox"] { display: none; }
+        .exam-option label {
+            display: block; padding: 1rem; border: 2px solid #E5E7EB; border-radius: 0.5rem;
+            cursor: pointer; transition: all 0.2s; background: white;
+        }
+        .exam-option input:checked + label { border-color: #3B82F6; background-color: #EFF6FF; }
+        
+        .nav-btn { transition: all 0.2s; }
+        .nav-btn.active { background-color: #10B981; color: white; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-stomach text-primary text-3xl mr-3"></i>
+                    <span class="font-display text-xl text-primary md:text-2xl tracking-wide">BioGastro</span>
+                </div>
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <button onclick="switchPhase('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 active">Home</button>
+                    <button onclick="switchPhase('memorize')" id="nav-memorize" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-book-open mr-1 hidden md:inline"></i>Memorize</button>
+                    <button onclick="switchPhase('recall')" id="nav-recall" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-gamepad mr-1 hidden md:inline"></i>Recall</button>
+                    <button onclick="switchPhase('exam')" id="nav-exam" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-pen-clip mr-1 hidden md:inline"></i>Exam</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <section id="phase-home" class="phase-section active">
+            <!-- Petunjuk Penggunaan Media DIPINDAHKAN KE ATAS -->
+            <div class="bg-blue-50 border-l-4 border-accent p-6 rounded-xl shadow-md mb-8">
+                <h3 class="font-bold text-lg text-accent mb-3"><i class="fa-solid fa-circle-info mr-2"></i>Petunjuk Penggunaan Media:</h3>
+                <ol class="list-decimal list-inside text-gray-700 space-y-2 text-sm">
+                    <li>Media pembelajaran IPA Kelas 8 Materi Sistem Pencernaan Makanan pada manusia terdiri dari 3 Fase yaitu Memorize, Recall dan Exam.</li>
+                    <li>Setiap Fase harus dipelajari secara berurutan. Pengguna tidak dapat melewati fase secara acak.</li>
+                    <li>Di setiap fase ada tombol ceklist yang menandakan materi tersebut telah dipelajari. Silahkan klik ceklist tersebut.</li>
+                    <li>Pada Fase Exam, peserta <strong>WAJIB</strong> menuliskan Nama lengkap beserta kelas sebagai hasil belajar. Peserta hanya dapat melakukan exam atau ujian sekali saja (tidak ada pengulangan).</li>
+                    <li>Selamat belajar secara mandiri. Jika ada yang belum dipahami silahkan menghubungi <a href="#" class="text-accent font-bold hover:underline">@pagurudan</a>.</li>
+                </ol>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
+                <div class="p-8 md:p-12 md:w-1/2 flex flex-col justify-center">
+                    <span class="text-secondary font-bold tracking-wider uppercase text-sm mb-2">IPA Kelas VIII</span>
+                    <h1 class="font-display text-4xl md:text-5xl text-dark mb-4 leading-tight">Sistem Pencernaan Makanan Pada Manusia</h1>
+                    <p class="text-gray-600 mb-8 text-lg">Pelajari bagaimana tubuh kita memproses makanan menjadi energi melalui 3 fase pembelajaran interaktif: Memorize, Recall, dan Exam.</p>
+                    
+                    <div class="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+                        <button onclick="switchPhase('memorize')" class="bg-primary hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:-translate-y-1 flex items-center justify-center">
+                            Mulai Belajar <i class="fa-solid fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 bg-blue-50 p-8 flex items-center justify-center">
+                    <img src="https://www.image2url.com/r2/default/images/1787398245900-da3a9a7c-7326-49be-b3dd-1444f42e5979.jpg" alt="Ilustrasi Pencernaan" class="rounded-xl shadow-md max-w-full h-auto object-cover border-4 border-white">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+                <div class="bg-white p-6 rounded-xl shadow-md text-center border-t-4 border-accent">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-brain text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">1. Fase Memorize</h3>
+                    <p class="text-sm text-gray-600">Pelajari materi lengkap beserta anatomi organ pencernaan mekanik dan kimiawi.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center border-t-4 border-secondary">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-puzzle-piece text-2xl text-secondary"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">2. Fase Recall</h3>
+                    <p class="text-sm text-gray-600">Latih ingatanmu dengan permainan Drag & Drop dan Flashcard interaktif.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md text-center border-t-4 border-primary">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-graduation-cap text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="font-bold text-xl mb-2">3. Fase Exam</h3>
+                    <p class="text-sm text-gray-600">Uji pemahamanmu dengan 20 soal evaluasi dan kumpulkan nilaimu.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="phase-memorize" class="phase-section">
+            <div class="text-center mb-8">
+                <h2 class="font-display text-3xl text-dark">Fase Memorize: Eksplorasi Materi</h2>
+                <p class="text-gray-600 mt-2">Pahami organ-organ dan proses pencernaan secara mendalam.</p>
+            </div>
+
+            <!-- Progress Bar Memorize -->
+            <div class="max-w-3xl mx-auto mb-8 bg-white p-5 rounded-xl shadow-md border border-gray-100">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-sm font-bold text-gray-600"><i class="fa-solid fa-chart-line mr-2 text-primary"></i>Progres Belajar:</span>
+                    <span id="memorize-progress-text" class="text-sm font-bold text-primary bg-green-50 px-3 py-1 rounded-full">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div id="memorize-progress-bar" class="bg-primary h-3 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-6 md:p-10 mb-8">
+                <div class="prose max-w-none text-gray-700">
+                    <h3 class="text-2xl font-bold text-primary mb-4 border-b-2 border-green-200 pb-2">Pendahuluan</h3>
+                    <p>Sistem pencernaan atau sistem gastrointestinal adalah serangkaian organ yang memiliki fungsi untuk mencerna makanan. Organ-organ ini mengolah makanan utuh menjadi zat-zat makanan (nutrisi) yang dapat diserap oleh tubuh untuk mendapatkan sumber energi.</p>
+                    
+                    <div class="mt-4 flex items-center bg-blue-50 p-3 rounded-lg border border-blue-100 max-w-sm">
+                        <input type="checkbox" id="check-pendahuluan" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                        <label for="check-pendahuluan" class="ml-3 text-sm font-bold text-gray-700 cursor-pointer">Saya telah memahami materi ini</label>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8 my-8 items-center bg-gray-50 p-6 rounded-lg">
+                        <div>
+                            <h4 class="text-xl font-bold mb-3 text-accent"><i class="fa-solid fa-gears mr-2"></i>Macam Proses Pencernaan</h4>
+                            <ul class="space-y-4">
+                                <li class="bg-white p-4 rounded-md shadow-sm">
+                                    <strong class="text-gray-900 block">1. Pencernaan Mekanik</strong>
+                                    Proses mengubah ukuran makanan menjadi lebih kecil dengan gerakan seperti mengunyah, meremas, dan menghancurkan. Terjadi di <strong>mulut</strong> (oleh gigi) dan <strong>lambung</strong> (oleh otot lambung).
+                                </li>
+                                <li class="bg-white p-4 rounded-md shadow-sm">
+                                    <strong class="text-gray-900 block">2. Pencernaan Kimiawi</strong>
+                                    Proses mengubah partikel makanan melibatkan <strong>enzim</strong> agar siap diserap tubuh. Terjadi di mulut, kerongkongan, lambung, hati, pankreas, empedu, dan usus.
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <img src="https://www.image2url.com/r2/default/images/1787398245900-da3a9a7c-7326-49be-b3dd-1444f42e5979.jpg" alt="Organ Pencernaan Manusia" class="rounded-lg shadow-md w-full border border-gray-200 hover:scale-105 transition-transform duration-300">
+                            <p class="text-center text-sm text-gray-500 mt-2 italic">Gambar 1: Organ-organ Pencernaan Manusia</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-8 flex items-center bg-blue-50 p-3 rounded-lg border border-blue-100 max-w-sm">
+                        <input type="checkbox" id="check-macam" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                        <label for="check-macam" class="ml-3 text-sm font-bold text-gray-700 cursor-pointer">Saya paham macam proses pencernaan</label>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-primary mb-6 border-b-2 border-green-200 pb-2 mt-12">Macam-Macam Organ Pencernaan</h3>
+
+                    <!-- Organ 1 & 2 -->
+                    <div class="grid md:grid-cols-2 gap-8 mb-12">
+                        <div class="materi-card bg-white border border-gray-100 rounded-xl shadow-md p-6">
+                            <h4 class="text-xl font-bold mb-3 flex items-center"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">1</span> Mulut</h4>
+                            <img src="https://www.image2url.com/r2/default/images/1787398243338-567715ec-7cf5-4c6a-b4ce-33cb79a0a0e5.jpg" alt="Anatomi Mulut" class="w-full rounded mb-4">
+                            <p class="text-sm">Tempat masuknya makanan. Terjadi pencernaan <strong>mekanik oleh gigi</strong> (menghancurkan makanan) dan <strong>kimiawi oleh enzim amilase</strong> (mengubah amilum/pati menjadi gula sederhana). Enzim ini diproduksi kelenjar ludah. Lidah berfungsi mengaduk makanan.</p>
+                            <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
+                                <input type="checkbox" id="check-mulut" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <label for="check-mulut" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
+                            </div>
+                        </div>
+                        
+                        <div class="materi-card bg-white border border-gray-100 rounded-xl shadow-md p-6">
+                            <h4 class="text-xl font-bold mb-3 flex items-center"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">2</span> Faring & Esofagus</h4>
+                            <img src="https://www.image2url.com/r2/default/images/1787398241424-a176debe-608d-4a67-9818-fea3944d15e5.jpg" alt="Faring dan Esofagus" class="w-full rounded mb-4">
+                            <p class="text-sm"><strong>Tenggorokan (Faring)</strong> menghubungkan rongga mulut ke kerongkongan. <strong>Kerongkongan (Esofagus)</strong> melakukan <strong>Gerakan Peristaltik</strong> (meremas-remas) untuk mendorong makanan menuju lambung.</p>
+                            <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
+                                <input type="checkbox" id="check-faring" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <label for="check-faring" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organ 3 & 4 -->
+                    <div class="grid md:grid-cols-2 gap-8 mb-12">
+                        <div class="materi-card bg-white border border-gray-100 rounded-xl shadow-md p-6">
+                            <h4 class="text-xl font-bold mb-3 flex items-center"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">3</span> Lambung</h4>
+                            <img src="https://www.image2url.com/r2/default/images/1787398240232-87d0d009-e79d-4c72-b120-c6bcdc791b53.jpg" alt="Bagian Lambung" class="w-full rounded mb-4">
+                            <p class="text-sm mb-2">Terjadi pencernaan mekanik (otot lambung) dan kimiawi (getah lambung). Terdiri dari Kardiak, Fundus, Badan Lambung, Pilorus.</p>
+                            <ul class="text-sm list-disc pl-5">
+                                <li><strong>Pepsin:</strong> Memecah protein jadi asam amino.</li>
+                                <li><strong>Renin:</strong> Mengubah protein jadi kasein.</li>
+                                <li><strong>Asam Klorida (HCl):</strong> Membunuh kuman & mengaktifkan pepsin.</li>
+                            </ul>
+                            <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
+                                <input type="checkbox" id="check-lambung" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <label for="check-lambung" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
+                            </div>
+                        </div>
+                        
+                        <div class="materi-card bg-white border border-gray-100 rounded-xl shadow-md p-6">
+                            <h4 class="text-xl font-bold mb-3 flex items-center"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">4</span> Kelenjar Tambahan</h4>
+                            <img src="https://www.image2url.com/r2/default/images/1787398234565-4e418aa4-fe8a-443d-968a-fff36483f7c6.jpg" alt="Hati Pankreas Empedu" class="w-full rounded mb-4">
+                            <ul class="text-sm space-y-2">
+                                <li><strong>Hati:</strong> Menghasilkan cairan empedu (untuk mencerna lemak).</li>
+                                <li><strong>Kantung Empedu:</strong> Menampung empedu & menyalurkannya ke usus halus.</li>
+                                <li><strong>Pankreas:</strong> Produksi enzim (Amilase, Lipase, Tripsin) dan senyawa bikarbonat penetral asam lambung.</li>
+                            </ul>
+                            <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
+                                <input type="checkbox" id="check-kelenjar" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <label for="check-kelenjar" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Organ 5 & 6 (Revisi Penjelasan Enzim Usus Halus) -->
+                    <div class="grid md:grid-cols-2 gap-8 mb-6">
+                        <div class="materi-card bg-white border border-gray-100 rounded-xl shadow-md p-6">
+                            <h4 class="text-xl font-bold mb-3 flex items-center"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">5</span> Usus Halus</h4>
+                            <img src="https://www.image2url.com/r2/default/images/1787398234453-9cacc2dd-d255-4d8d-a32d-9c751c1dae04.jpg" alt="Usus Halus" class="w-full rounded mb-4">
+                            <p class="text-sm mb-2">Dibagi menjadi 3 bagian utama:</p>
+                            <ul class="text-sm list-disc pl-5">
+                                <li class="mb-2"><strong>Duodenum (12 Jari):</strong> Tempat bermuaranya saluran empedu dan pankreas. Terjadi pencernaan kimiawi oleh enzim:
+                                    <ul class="list-disc pl-4 mt-1 text-gray-600">
+                                        <li><strong>Amilase:</strong> Mengubah zat pati/amilum menjadi zat gula sederhana (glukosa).</li>
+                                        <li><strong>Lipase:</strong> Mengubah lemak menjadi asam lemak dan gliserol.</li>
+                                        <li><strong>Tripsin:</strong> Mengubah protein (pepton) menjadi asam amino.</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Jejunum (Kosong) & Ileum (Penyerapan):</strong> Tempat utama penyerapan sari-sari makanan ke dalam darah. Permukaannya dipenuhi Vili (jonjot usus) untuk memperluas area penyerapan.</li>
+                            </ul>
+                            <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
+                                <input type="checkbox" id="check-usus-halus" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <label for="check-usus-halus" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
+                            </div>
+                        </div>
+                        
+                        <div class="materi-card bg-white border border-gray-100 rounded-xl shadow-md p-6">
+                            <h4 class="text-xl font-bold mb-3 flex items-center"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">6</span> Usus Besar & Anus</h4>
+                            <img src="https://www.image2url.com/r2/default/images/1787398234023-c4240183-1c59-45f5-9e19-bcba49112997.jpg" alt="Usus Besar" class="w-full rounded mb-4">
+                            <p class="text-sm"><strong>Usus Besar (Kolon):</strong> Tempat pembusukan sisa makanan menjadi feses dibantu bakteri <em>E. coli</em> dan penyerapan kembali air. Memiliki Umbai Cacing (Apendiks).</p>
+                            <p class="text-sm mt-2"><strong>Rektum:</strong> Tempat simpan feses sementara.</p>
+                            <p class="text-sm mt-2"><strong>Anus:</strong> Saluran pembuangan feses dari tubuh.</p>
+                            <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
+                                <input type="checkbox" id="check-usus-besar" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <label for="check-usus-besar" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button onclick="switchPhase('recall')" class="bg-secondary hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105">
+                    Lanjut ke Fase Recall <i class="fa-solid fa-gamepad ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- RECALL PHASE -->
+        <section id="phase-recall" class="phase-section">
+            <div class="text-center mb-6">
+                <h2 class="font-display text-3xl text-dark">Fase Recall: Uji Ingatanmu</h2>
+                <p class="text-gray-600 mt-2">Pilih mode permainan untuk mengasah ingatanmu tentang materi pencernaan.</p>
+            </div>
+
+            <!-- Progress Bar Recall -->
+            <div class="max-w-xl mx-auto mb-8 bg-white p-5 rounded-xl shadow-md border border-gray-100">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-sm font-bold text-gray-600"><i class="fa-solid fa-trophy mr-2 text-secondary"></i>Progres Latihan:</span>
+                    <span id="recall-progress-text" class="text-sm font-bold text-secondary bg-yellow-50 px-3 py-1 rounded-full">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div id="recall-progress-bar" class="bg-secondary h-3 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Game Tabs -->
+            <div class="flex justify-center mb-8 space-x-2">
+                <button onclick="switchGame('dnd')" id="tab-dnd" class="px-6 py-2 bg-primary text-white rounded-l-lg font-bold hover:bg-green-600 transition-colors">Drag & Drop</button>
+                <button onclick="switchGame('flashcard')" id="tab-flashcard" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-r-lg font-bold hover:bg-gray-300 transition-colors">Flashcards</button>
+            </div>
+
+            <!-- Game 1: Drag and Drop -->
+            <div id="game-dnd" class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-5xl mx-auto border-t-4 border-primary block">
+                <div class="flex justify-between items-center mb-4 border-b pb-4">
+                    <h3 class="text-xl font-bold text-dark"><i class="fa-solid fa-hand-pointer text-accent mr-2"></i>Susun Organ Pencernaan</h3>
+                    <div id="dnd-score" class="font-bold text-lg text-secondary flex items-center">
+                        <span id="star-container" class="flex mr-2"></span> 0 / 8
+                    </div>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-8 mt-6">
+                    <!-- Image Container -->
+                    <div class="md:w-1/2">
+                        <div id="dnd-container" class="shadow-sm w-full">
+                            <img src="https://www.image2url.com/r2/default/images/1787403952576-32bb4247-2d3f-4e60-95fb-3c5a8cbcaf7a.png" id="dnd-image" alt="Anatomi Pencernaan" class="w-full h-auto object-contain bg-white border border-gray-200">
+                        </div>
+                    </div>
+
+                    <!-- Table and Labels Container -->
+                    <div class="md:w-1/2 flex flex-col">
+                        <p class="text-sm text-gray-600 mb-5 bg-blue-50 p-4 rounded-lg border border-blue-100 leading-relaxed"><i class="fa-solid fa-circle-info mr-2 text-accent"></i><strong>Petunjuk:</strong> Perhatikan nomor pada gambar di samping. Tarik (drag) label organ di bawah ini dan letakkan pada kotak di dalam tabel yang sesuai dengan nomornya.</p>
+                        
+                        <!-- Draggable Labels -->
+                        <div class="mb-6">
+                            <div id="labels-container" class="flex flex-wrap gap-2">
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="mulut">Mulut</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="kerongkongan">Kerongkongan</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="lambung">Lambung</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="hati">Hati</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="pankreas">Pankreas</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="usus-halus">Usus Halus</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="usus-besar">Usus Besar</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="anus">Anus</div>
+                            </div>
+                        </div>
+
+                        <!-- Target Table -->
+                        <div class="overflow-hidden rounded-lg border border-gray-200 shadow-sm flex-grow">
+                            <table class="w-full text-sm text-left">
+                                <thead class="bg-gray-100 text-gray-700">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-3 w-20 text-center border-b font-bold">Nomor</th>
+                                        <th scope="col" class="px-4 py-3 border-b font-bold">Label Organ (Area Target)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-4 py-2 text-center font-bold text-lg text-gray-500 border-r">1</td>
+                                        <td class="px-4 py-2"><div class="drop-zone" data-target="mulut">Tarik ke sini</div></td>
+                                    </tr>
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-4 py-2 text-center font-bold text-lg text-gray-500 border-r">2</td>
+                                        <td class="px-4 py-2"><div class="drop-zone" data-target="kerongkongan">Tarik ke sini</div></td>
+                                    </tr>
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-4 py-2 text-center font-bold text-lg text-gray-500 border-r">3</td>
+                                        <td class="px-4 py-2"><div class="drop-zone" data-target="lambung">Tarik ke sini</div></td>
+                                    </tr>
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-4 py-2 text-center font-bold text-lg text-gray-500 border-r">4</td>
+                                        <td class="px-4 py-2"><div class="drop-zone" data-target="hati">Tarik ke sini</div></td>
+                                    </tr>
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-4 py-2 text-center font-bold text-lg text-gray-500 border-r">5</td>
+                                        <td class="px-4 py-2"><div class="drop-zone" data-target="pankreas">Tarik ke sini</div></td>
+                                    </tr>
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-4 py-2 text-center font-bold text-lg text-gray-500 border-r">6</td>
+                                        <td class="px-4 py-2"><div class="drop-zone" data-target="usus-halus">Tarik ke sini</div></td>
+                                    </tr>
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-4 py-2 text-center font-bold text-lg text-gray-500 border-r">7</td>
+                                        <td class="px-4 py-2"><div class="drop-zone" data-target="usus-besar">Tarik ke sini</div></td>
+                                    </tr>
+                                    <tr class="bg-white hover:bg-gray-50">
+                                        <td class="px-4 py-2 text-center font-bold text-lg text-gray-500 border-r">8</td>
+                                        <td class="px-4 py-2"><div class="drop-zone" data-target="anus">Tarik ke sini</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div id="dnd-feedback" class="mt-4 p-3 rounded-lg hidden text-sm font-medium text-center"></div>
+                        
+                        <button onclick="resetDnd()" class="mt-6 text-gray-500 hover:text-dark text-sm underline self-center"><i class="fa-solid fa-rotate-right"></i> Reset Permainan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game 2: Flashcards (Revisi Soal Menjadi 10) -->
+            <div id="game-flashcard" class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-2xl mx-auto border-t-4 border-secondary hidden">
+                 <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-xl font-bold text-dark"><i class="fa-solid fa-clone text-secondary mr-2"></i>Kartu Ingatan (Flashcard)</h3>
+                    <span id="fc-counter" class="text-sm font-bold bg-gray-100 px-3 py-1 rounded-full">1 / 10</span>
+                </div>
+                
+                <div class="flip-card mx-auto" id="flashcard" onclick="flipCard()">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front shadow-lg">
+                            <span class="text-gray-400 text-sm absolute top-4 left-4 uppercase tracking-widest"><i class="fa-solid fa-question-circle mr-1"></i>Istilah</span>
+                            <h2 id="fc-term" class="text-3xl font-display text-accent mt-4 px-4 leading-tight">Enzim Amilase</h2>
+                            <p class="text-xs text-gray-400 absolute bottom-4">(Klik kartu untuk melihat arti)</p>
+                        </div>
+                        <div class="flip-card-back shadow-lg">
+                            <span class="text-green-200 text-sm absolute top-4 left-4 uppercase tracking-widest"><i class="fa-solid fa-lightbulb mr-1"></i>Pembahasan</span>
+                            <p id="fc-def" class="text-lg font-medium text-center mt-4 px-6 leading-relaxed">Berfungsi mengubah pati atau amilum menjadi gula sederhana. Dihasilkan oleh kelenjar ludah di mulut dan pankreas.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mt-8 space-x-6">
+                    <button onclick="prevCard()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-12 h-12 rounded-full flex items-center justify-center transition-colors shadow"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button onclick="nextCard()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 w-12 h-12 rounded-full flex items-center justify-center transition-colors shadow"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <button onclick="switchPhase('exam')" class="bg-dark hover:bg-gray-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105">
+                    Lanjut ke Fase Ujian (Exam) <i class="fa-solid fa-file-signature ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- EXAM PHASE -->
+        <section id="phase-exam" class="phase-section">
+            
+            <!-- Intro Exam Form -->
+            <div id="exam-intro" class="bg-white rounded-xl shadow-lg p-8 max-w-md mx-auto text-center border-t-4 border-red-500 block">
+                <i class="fa-solid fa-file-contract text-5xl text-red-500 mb-4"></i>
+                <h2 class="font-display text-2xl text-dark mb-2">Uji Pemahaman</h2>
+                <p class="text-gray-600 text-sm mb-6">Kerjakan 20 soal variatif untuk menguji pemahamanmu. Nilai akan direkam.</p>
+                
+                <div class="mb-6 text-left">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="studentName">Nama Lengkap Siswa</label>
+                    <input class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="studentName" type="text" placeholder="Masukkan nama Anda...">
+                </div>
+
+                <div class="mb-6 text-left">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="studentClass">Kelas</label>
+                    <input class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="studentClass" type="text" placeholder="Contoh: VIII A">
+                </div>
+                
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left text-xs text-yellow-800">
+                    <p><strong>Info:</strong> Pastikan Anda terkoneksi internet. Nilai akan otomatis dikirimkan ke Google Spreadsheet Guru setelah selesai ujian. <strong>Ujian hanya dapat dilakukan 1 kali.</strong></p>
+                </div>
+
+                <button onclick="startExam()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition-colors">
+                    Mulai Ujian Sekarang
+                </button>
+            </div>
+
+            <!-- Exam Questions Area -->
+            <div id="exam-area" class="bg-white rounded-xl shadow-lg p-6 md:p-10 max-w-3xl mx-auto hidden border-t-4 border-primary">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b">
+                    <span class="font-bold text-gray-500 uppercase tracking-wider text-sm">Soal <span id="q-current" class="text-primary text-lg">1</span> / 20</span>
+                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-semibold"><i class="fa-regular fa-clock mr-1"></i> <span id="exam-timer">--:--</span></span>
+                </div>
+                
+                <!-- Question Container rendered by JS -->
+                <div id="question-container" class="min-h-[200px]"></div>
+
+                <div class="flex justify-between mt-8 pt-4 border-t">
+                    <button id="btn-prev-q" onclick="prevQuestion()" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 hidden">Sebelumnya</button>
+                    <div class="flex-grow"></div>
+                    <button id="btn-next-q" onclick="nextQuestion()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-600">Selanjutnya</button>
+                    <button id="btn-submit-q" onclick="submitExam()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 hidden font-bold"><i class="fa-solid fa-paper-plane mr-2"></i>Kumpulkan Jawaban</button>
+                </div>
+            </div>
+
+            <!-- Exam Result Area -->
+            <div id="exam-result" class="bg-white rounded-xl shadow-lg p-8 max-w-lg mx-auto text-center hidden border-t-4 border-accent">
+                <h2 class="font-display text-3xl text-dark mb-2">Hasil Ujian</h2>
+                <p class="text-gray-600 mb-6">Kerja bagus, <strong id="result-name" class="text-accent"></strong>!</p>
+                
+                <div class="w-32 h-32 rounded-full border-8 border-gray-100 flex items-center justify-center mx-auto mb-6 relative">
+                    <svg class="absolute inset-0 w-full h-full" viewBox="0 0 36 36">
+                        <path class="text-gray-200" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        <path id="score-circle" class="text-primary transition-all duration-1000 ease-out" stroke-dasharray="0, 100" stroke-width="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <div class="text-4xl font-display text-primary" id="result-score">0</div>
+                </div>
+                
+                <div id="sheet-status" class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg mb-6 flex items-start text-left">
+                    <i class="fa-solid fa-spinner fa-spin mt-1 mr-3 text-xl"></i>
+                    <div>
+                        <h4 class="font-bold">Mengirim Data...</h4>
+                        <p class="text-sm">Mohon tunggu, nilai Anda sedang dikirim ke Google Spreadsheet Guru.</p>
+                    </div>
+                </div>
+
+                <button onclick="location.reload()" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-6 rounded-lg transition-colors">Kembali ke Beranda</button>
+            </div>
+
+        </section>
+    </main>
+
+    <footer class="bg-white border-t py-6 text-center text-gray-500 text-sm mt-auto">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>&copy; 2026 Media pembelajaran Interaktif IPA- Kelas VIII. dibuat oleh @pagurudan & AI.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Navigation Logic ---
+        let isDndCompleted = false;
+        let isFlashcardCompleted = false;
+        let viewedFlashcards = new Set([0]); // Set melacak indeks flashcard yg dibaca
+
+        // Fungsi Update Progress Bar Memorize
+        function updateMemorizeProgress() {
+            const checks = document.querySelectorAll('.memorize-check');
+            let checkedCount = 0;
+            checks.forEach(check => {
+                if (check.checked) checkedCount++;
+            });
+            const percentage = Math.round((checkedCount / checks.length) * 100);
+            
+            document.getElementById('memorize-progress-bar').style.width = percentage + '%';
+            document.getElementById('memorize-progress-text').innerText = percentage + '%';
+        }
+
+        // Listener untuk setiap ceklist di Memorize
+        document.addEventListener('DOMContentLoaded', () => {
+            const checks = document.querySelectorAll('.memorize-check');
+            checks.forEach(check => {
+                check.addEventListener('change', updateMemorizeProgress);
+            });
+        });
+
+        // Fungsi Update Progress Bar Recall
+        function updateRecallProgress() {
+            let tasksCompleted = 0;
+            if(isDndCompleted) tasksCompleted++;
+            if(isFlashcardCompleted) tasksCompleted++;
+            
+            const percentage = Math.round((tasksCompleted / 2) * 100);
+            document.getElementById('recall-progress-bar').style.width = percentage + '%';
+            document.getElementById('recall-progress-text').innerText = percentage + '%';
+        }
+
+        function checkMemorizeCompleted() {
+            const checks = document.querySelectorAll('.memorize-check');
+            for (let i = 0; i < checks.length; i++) {
+                if (!checks[i].checked) return false;
+            }
+            return true;
+        }
+
+        function switchPhase(phaseId) {
+            // Validasi apakah prasyarat terpenuhi
+            if (phaseId === 'recall' && !checkMemorizeCompleted()) {
+                Swal.fire({
+                    title: 'Materi Belum Selesai',
+                    text: 'Pastikan Anda telah mencentang semua kotak "Tandai Selesai" / "Paham" pada fase Memorize.',
+                    icon: 'warning',
+                    confirmButtonColor: '#10B981'
+                });
+                return;
+            }
+            if (phaseId === 'exam') {
+                if (!isDndCompleted || !isFlashcardCompleted) {
+                    Swal.fire({
+                        title: 'Fase Recall Belum Selesai',
+                        text: 'Anda harus menyelesaikan permainan Drag & Drop dan membaca semua Flashcard (10/10) sebelum masuk ke Ujian.',
+                        icon: 'warning',
+                        confirmButtonColor: '#10B981'
+                    });
+                    return;
+                }
+            }
+
+            document.querySelectorAll('.phase-section').forEach(el => el.classList.remove('active'));
+            document.getElementById('phase-' + phaseId).classList.add('active');
+            
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active', 'bg-primary', 'text-white'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.add('hover:bg-gray-100'));
+            
+            const activeBtn = document.getElementById('nav-' + phaseId);
+            if(activeBtn) {
+                activeBtn.classList.remove('hover:bg-gray-100');
+                activeBtn.classList.add('active', 'bg-primary', 'text-white');
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function switchGame(gameId) {
+            document.getElementById('game-dnd').style.display = 'none';
+            document.getElementById('game-flashcard').style.display = 'none';
+            
+            document.getElementById('tab-dnd').classList.remove('bg-primary', 'text-white');
+            document.getElementById('tab-dnd').classList.add('bg-gray-200', 'text-gray-700');
+            document.getElementById('tab-flashcard').classList.remove('bg-primary', 'text-white');
+            document.getElementById('tab-flashcard').classList.add('bg-gray-200', 'text-gray-700');
+
+            document.getElementById('game-' + gameId).style.display = 'block';
+            
+            if(gameId === 'dnd') {
+                document.getElementById('tab-dnd').classList.add('bg-primary', 'text-white');
+                document.getElementById('tab-dnd').classList.remove('bg-gray-200', 'text-gray-700');
+            } else {
+                document.getElementById('tab-flashcard').classList.add('bg-primary', 'text-white');
+                document.getElementById('tab-flashcard').classList.remove('bg-gray-200', 'text-gray-700');
+            }
+        }
+
+        // --- Drag and Drop Logic ---
+        const draggables = document.querySelectorAll('.draggable-item');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        let dndScore = 0;
+        const totalDnd = 8; // Diupdate menjadi 8 karena ada Pankreas
+
+        // Fungsi untuk mengacak urutan label organ agar tidak mudah ditebak
+        function shuffleLabels() {
+            const container = document.getElementById('labels-container');
+            for (let i = container.children.length; i >= 0; i--) {
+                container.appendChild(container.children[Math.random() * i | 0]);
+            }
+        }
+        
+        // Panggil fungsi acak saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', shuffleLabels);
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+                event.dataTransfer.setData('text/plain', draggable.dataset.id);
+            });
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+            draggable.addEventListener('touchstart', (e) => {}, {passive:true});
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault(); 
+                zone.classList.add('hover');
+            });
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('hover');
+            });
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                zone.classList.remove('hover');
+                if(zone.classList.contains('filled')) return;
+
+                const draggedId = e.dataTransfer.getData('text/plain');
+                const targetId = zone.dataset.target;
+
+                if (draggedId === targetId) {
+                    zone.classList.add('filled');
+                    const draggedElement = document.querySelector(`.draggable-item[data-id="${draggedId}"]`);
+                    zone.innerHTML = draggedElement.innerText;
+                    
+                    draggedElement.classList.add('hidden-item');
+                    
+                    dndScore++;
+                    updateStars();
+                    showDndFeedback(`Benar! Itu adalah ${draggedElement.innerText}.`, 'success');
+
+                    if(dndScore === totalDnd) {
+                        isDndCompleted = true; // Tandai dnd selesai
+                        updateRecallProgress(); // Update Bar
+                        setTimeout(() => {
+                            Swal.fire('Luar Biasa!', 'Kamu berhasil menyusun semua 8 organ dengan benar!', 'success');
+                        }, 500);
+                    }
+                } else {
+                    zone.classList.add('wrong');
+                    setTimeout(() => zone.classList.remove('wrong'), 500);
+                    showDndFeedback(`Oops, posisi kurang tepat. Coba lagi!`, 'error');
+                }
+            });
+        });
+
+        function updateStars() {
+            document.getElementById('dnd-score').innerHTML = `<span id="star-container" class="flex mr-2 text-yellow-400 text-sm mt-1"></span> ${dndScore} / ${totalDnd}`;
+            const container = document.getElementById('star-container');
+            container.innerHTML = '';
+            for(let i=0; i<dndScore; i++){
+                container.innerHTML += '<i class="fa-solid fa-star"></i>';
+            }
+        }
+
+        function showDndFeedback(msg, type) {
+            const fb = document.getElementById('dnd-feedback');
+            fb.innerText = msg;
+            fb.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+            if(type === 'success') {
+                fb.classList.add('bg-green-100', 'text-green-800');
+            } else {
+                fb.classList.add('bg-red-100', 'text-red-800');
+            }
+            fb.style.display = 'block';
+            setTimeout(() => fb.style.display = 'none', 3000);
+        }
+
+        function resetDnd() {
+            dndScore = 0;
+            updateStars();
+            draggables.forEach(d => d.classList.remove('hidden-item'));
+            dropZones.forEach(z => {
+                z.classList.remove('filled', 'wrong');
+                z.innerHTML = 'Tarik ke sini';
+            });
+            // Acak posisi label kembali setelah direset
+            shuffleLabels();
+        }
+
+        // --- STREAMING_CHUNK:Flashcard Logic ---
+        // Penambahan Soal Flashcard Menjadi 10 Fokus Enzim
+        const flashcardsData = [
+            { term: "Enzim Amilase (Ptialin)", def: "Dihasilkan kelenjar ludah dan pankreas. Berfungsi memecah karbohidrat/amilum menjadi glukosa (gula sederhana)." },
+            { term: "Enzim Pepsin", def: "Dihasilkan di lambung dari aktivasi pepsinogen. Berfungsi memecah protein kompleks menjadi pepton atau asam amino." },
+            { term: "Enzim Renin", def: "Dihasilkan di lambung. Memiliki peran spesifik untuk mengendapkan protein susu (kasein) dari air susu yang masuk." },
+            { term: "Enzim Lipase", def: "Dihasilkan utamanya oleh pankreas. Berperan penting di usus halus untuk memecah lemak menjadi asam lemak dan gliserol." },
+            { term: "Enzim Tripsin", def: "Dihasilkan pankreas dalam bentuk tidak aktif (tripsinogen). Setelah aktif di usus, berfungsi melanjutkan pemecahan pepton menjadi asam amino." },
+            { term: "Asam Klorida (HCl)", def: "Disebut juga asam lambung. Berfungsi mematikan bakteri/kuman pada makanan dan menciptakan lingkungan asam agar enzim pepsin aktif." },
+            { term: "Cairan Empedu", def: "Bukan enzim, tapi diproduksi hati. Berfungsi mengemulsikan lemak (memecah gumpalan lemak jadi butiran kecil) agar mudah dicerna enzim lipase." },
+            { term: "Vili (Jonjot Usus)", def: "Struktur berlipat-lipat seperti jari pada dinding usus halus. Fungsinya untuk memperluas permukaan serap agar nutrisi terserap maksimal." },
+            { term: "Gerak Peristaltik", def: "Gerakan otot meremas dan mendorong makanan secara bergelombang. Terjadi utamanya di kerongkongan (esofagus) menuju lambung." },
+            { term: "Bakteri E. Coli", def: "Bakteri bersimbiosis mutualisme yang hidup di usus besar. Membantu membusukkan sisa makanan dan memproduksi Vitamin K." }
+        ];
+        let currentFcIndex = 0;
+        let isFlipped = false;
+
+        function loadFlashcard() {
+            const fc = flashcardsData[currentFcIndex];
+            document.getElementById('fc-term').innerText = fc.term;
+            document.getElementById('fc-def').innerText = fc.def;
+            document.getElementById('fc-counter').innerText = `${currentFcIndex + 1} / ${flashcardsData.length}`;
+            
+            const card = document.getElementById('flashcard');
+            if (isFlipped) {
+                card.classList.remove('flipped');
+                isFlipped = false;
+            }
+        }
+
+        function flipCard() {
+            const card = document.getElementById('flashcard');
+            card.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        function nextCard() {
+            currentFcIndex = (currentFcIndex + 1) % flashcardsData.length;
+            viewedFlashcards.add(currentFcIndex);
+            checkFlashcardCompletion();
+            loadFlashcard();
+        }
+        function prevCard() {
+            currentFcIndex = (currentFcIndex - 1 + flashcardsData.length) % flashcardsData.length;
+            viewedFlashcards.add(currentFcIndex);
+            checkFlashcardCompletion();
+            loadFlashcard();
+        }
+
+        function checkFlashcardCompletion() {
+            if (!isFlashcardCompleted && viewedFlashcards.size === flashcardsData.length) {
+                isFlashcardCompleted = true;
+                updateRecallProgress(); // Update bar
+                Swal.fire({
+                    title: 'Bagus Sekali!',
+                    text: 'Kamu telah membaca semua materi Flashcard. Sekarang kamu bisa lanjut ke fase Exam jika Drag & Drop sudah selesai!',
+                    icon: 'success',
+                    confirmButtonColor: '#10B981'
+                });
+            }
+        }
+
+        loadFlashcard();
+
+        // --- STREAMING_CHUNK:Exam & Data Submission Logic ---
+        const examQuestions = [
+            { type: 'pg', q: "Proses pencernaan makanan yang melibatkan enzim disebut proses pencernaan...", options: ["Mekanik", "Kimiawi", "Biologis", "Fisika"], ans: "Kimiawi" },
+            { type: 'pg', q: "Enzim amilase yang terdapat pada air liur berfungsi untuk memecah...", options: ["Protein menjadi asam amino", "Lemak menjadi asam lemak", "Amilum menjadi gula", "Protein menjadi kasein"], ans: "Amilum menjadi gula" },
+            { type: 'tf', q: "Pencernaan mekanik di dalam tubuh kita hanya terjadi di dalam mulut.", ans: "Salah" }, // Salah, di lambung jg
+            { type: 'pg', q: "Gerakan meremas-remas yang dilakukan dinding kerongkongan untuk mendorong makanan disebut gerak...", options: ["Mekanik", "Peristaltik", "Otonom", "Refleks"], ans: "Peristaltik" },
+            { type: 'mc', q: "Manakah dari enzim berikut yang diproduksi oleh getah lambung? (Pilih lebih dari 1)", options: ["Pepsin", "Amilase", "Renin", "Tripsin"], ans: ["Pepsin", "Renin"] },
+            { type: 'fill', q: "Organ pencernaan tambahan yang berfungsi menghasilkan cairan empedu adalah...", ans: "Hati" },
+            { type: 'tf', q: "Usus dua belas jari (duodenum) adalah bagian pertama dari usus besar.", ans: "Salah" }, // Salah, usus halus
+            { type: 'pg', q: "Berikut ini adalah fungsi usus besar, kecuali...", options: ["Menyerap kembali air", "Membusukkan sisa makanan", "Mencerna protein", "Membentuk feses"], ans: "Mencerna protein" },
+            { type: 'mc', q: "Bagian yang termasuk ke dalam usus halus adalah... (Pilih lebih dari 1)", options: ["Duodenum", "Kolon", "Jejunum", "Ileum"], ans: ["Duodenum", "Jejunum", "Ileum"] },
+            { type: 'pg', q: "Bakteri yang berperan membantu proses pembusukan sisa makanan di usus besar adalah...", options: ["Salmonella", "Escherichia coli", "Lactobacillus", "Streptococcus"], ans: "Escherichia coli" },
+            { type: 'pg', q: "Enzim lipase yang dihasilkan pankreas berfungsi untuk memecah...", options: ["Karbohidrat", "Protein", "Lemak", "Vitamin"], ans: "Lemak" },
+            { type: 'fill', q: "Tempat penyimpanan feses sementara sebelum dikeluarkan melalui anus adalah...", ans: "Rektum" },
+            { type: 'tf', q: "Gigi bertugas melakukan pencernaan secara mekanik.", ans: "Benar" },
+            { type: 'pg', q: "Apa fungsi utama Asam Klorida (HCl) di dalam lambung?", options: ["Mencerna lemak jenuh", "Membunuh kuman penyakit pada makanan", "Menyerap air berlebih", "Mengemulsikan empedu"], ans: "Membunuh kuman penyakit pada makanan" },
+            { type: 'pg', q: "Cairan empedu ditampung di kantung empedu sebelum akhirnya disalurkan ke...", options: ["Lambung", "Usus Halus", "Usus Besar", "Kerongkongan"], ans: "Usus Halus" },
+            { type: 'pg', q: "Senyawa bikarbonat dari pankreas berfungsi untuk...", options: ["Membentuk kasein", "Menghancurkan selulosa", "Menetralkan makanan dari lambung yang asam", "Membunuh bakteri e.coli"], ans: "Menetralkan makanan dari lambung yang asam" },
+            { type: 'mc', q: "Organ pencernaan pelengkap (kelenjar pencernaan) yang berada di luar saluran pencernaan utama adalah... (Pilih lebih dari 1)", options: ["Hati", "Lambung", "Pankreas", "Usus Halus"], ans: ["Hati", "Pankreas"] },
+            { type: 'fill', q: "Bagian lambung bagian atas yang bentuknya melekung seperti kubah disebut...", ans: "Fundus" },
+            { type: 'tf', q: "Vili atau jonjot usus pada dinding usus halus berfungsi untuk mempersempit area penyerapan sari makanan.", ans: "Salah" }, // Salah, memperluas
+            { type: 'pg', q: "Bagian dari usus besar yang jika meradang akibat sisa makanan tersumbat akan menyebabkan penyakit apendisitis adalah...", options: ["Kolon naik", "Kolon dasar", "Umbai cacing", "Rektum"], ans: "Umbai cacing" }
+        ];
+
+        let currentExamQ = 0;
+        let userAnswers = new Array(examQuestions.length).fill(null);
+        let examTimer;
+        let timeElapsed = 0;
+        let studentName = "";
+        let studentClass = "";
+
+        function startExam() {
+            const nameInput = document.getElementById('studentName').value.trim();
+            const classInput = document.getElementById('studentClass').value.trim();
+            if(!nameInput || !classInput) {
+                Swal.fire('Perhatian', 'Mohon masukkan Nama dan Kelas Anda terlebih dahulu!', 'warning');
+                return;
+            }
+
+            // Validasi percobaan ujian 1 kali berdasarkan nama dan kelas
+            const studentId = (nameInput + "_" + classInput).toLowerCase().replace(/\s/g, '');
+            const hasTakenExam = localStorage.getItem('exam_completed_' + studentId);
+            
+            if (hasTakenExam) {
+                Swal.fire('Akses Ditolak', 'Maaf, Anda sudah pernah mengerjakan ujian dengan Nama dan Kelas ini. Ujian hanya dapat dilakukan satu kali.', 'error');
+                return;
+            }
+
+            studentName = nameInput;
+            studentClass = classInput;
+            document.getElementById('exam-intro').style.display = 'none';
+            document.getElementById('exam-area').style.display = 'block';
+            
+            timeElapsed = 0;
+            examTimer = setInterval(() => {
+                timeElapsed++;
+                let m = Math.floor(timeElapsed / 60).toString().padStart(2, '0');
+                let s = (timeElapsed % 60).toString().padStart(2, '0');
+                document.getElementById('exam-timer').innerText = `${m}:${s}`;
+            }, 1000);
+
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const qObj = examQuestions[currentExamQ];
+            const container = document.getElementById('question-container');
+            document.getElementById('q-current').innerText = currentExamQ + 1;
+            
+            let html = `<h3 class="text-xl font-medium text-dark mb-6 leading-relaxed">${qObj.q}</h3>`;
+            
+            const prevAns = userAnswers[currentExamQ];
+
+            if (qObj.type === 'pg') {
+                html += '<div class="space-y-3">';
+                qObj.options.forEach((opt, idx) => {
+                    const isChecked = prevAns === opt ? 'checked' : '';
+                    html += `
+                        <div class="exam-option">
+                            <input type="radio" id="opt${idx}" name="qpg" value="${opt}" ${isChecked} onchange="saveAnswer('${opt}')">
+                            <label for="opt${idx}">${opt}</label>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            } 
+            else if (qObj.type === 'tf') {
+                html += '<div class="flex space-x-4">';
+                ['Benar', 'Salah'].forEach((opt, idx) => {
+                    const isChecked = prevAns === opt ? 'checked' : '';
+                    html += `
+                        <div class="exam-option flex-1">
+                            <input type="radio" id="tf${idx}" name="qtf" value="${opt}" ${isChecked} onchange="saveAnswer('${opt}')">
+                            <label for="tf${idx}" class="text-center font-bold">${opt}</label>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            else if (qObj.type === 'fill') {
+                const val = prevAns || '';
+                html += `
+                    <div class="mt-4">
+                        <input type="text" id="fillInput" class="shadow-sm appearance-none border-2 border-gray-200 rounded-lg w-full py-4 px-4 text-gray-700 leading-tight focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Ketik jawaban singkat Anda..." value="${val}" onkeyup="saveAnswer(this.value)">
+                    </div>
+                `;
+            }
+            else if (qObj.type === 'mc') {
+                html += '<div class="space-y-3">';
+                qObj.options.forEach((opt, idx) => {
+                    const isChecked = (Array.isArray(prevAns) && prevAns.includes(opt)) ? 'checked' : '';
+                    html += `
+                        <div class="exam-option">
+                            <input type="checkbox" id="mc${idx}" name="qmc" value="${opt}" ${isChecked} onchange="saveMcAnswer()">
+                            <label for="mc${idx}">${opt}</label>
+                        </div>
+                    `;
+                });
+                html += '</div><p class="text-xs text-accent mt-2">*Bisa pilih lebih dari satu jawaban</p>';
+            }
+
+            container.innerHTML = html;
+
+            document.getElementById('btn-prev-q').style.display = currentExamQ > 0 ? 'block' : 'none';
+            if (currentExamQ === examQuestions.length - 1) {
+                document.getElementById('btn-next-q').style.display = 'none';
+                document.getElementById('btn-submit-q').style.display = 'block';
+            } else {
+                document.getElementById('btn-next-q').style.display = 'block';
+                document.getElementById('btn-submit-q').style.display = 'none';
+            }
+        }
+
+        function saveAnswer(val) {
+            userAnswers[currentExamQ] = val;
+        }
+
+        function saveMcAnswer() {
+            const checkboxes = document.querySelectorAll('input[name="qmc"]:checked');
+            let vals = [];
+            checkboxes.forEach(cb => vals.push(cb.value));
+            userAnswers[currentExamQ] = vals.length > 0 ? vals : null;
+        }
+
+        function nextQuestion() {
+            if(currentExamQ < examQuestions.length - 1) {
+                currentExamQ++;
+                renderQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if(currentExamQ > 0) {
+                currentExamQ--;
+                renderQuestion();
+            }
+        }
+
+        function submitExam() {
+            // Validasi: Cegah submit jika masih ada soal yang belum dijawab
+            const hasUnanswered = userAnswers.some(ans => ans === null || ans === '' || (Array.isArray(ans) && ans.length === 0));
+            
+            if (hasUnanswered) {
+                Swal.fire({
+                    title: 'Ujian Belum Selesai!',
+                    text: 'Anda wajib menjawab semua soal sebelum mengumpulkan hasil ujian. Periksa kembali soal yang belum diisi.',
+                    icon: 'warning',
+                    confirmButtonColor: '#10B981'
+                });
+                return; // Membatalkan fungsi submit agar tidak lanjut menghitung skor
+            }
+
+            Swal.fire({
+                title: 'Yakin kumpulkan?',
+                text: "Pastikan semua soal telah terjawab.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#10B981',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Kumpulkan!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    clearInterval(examTimer);
+                    calculateScore();
+                }
+            })
+        }
+
+        function calculateScore() {
+            let score = 0;
+            const pointsPerQ = 100 / examQuestions.length;
+
+            examQuestions.forEach((q, idx) => {
+                const ans = userAnswers[idx];
+                if(q.type === 'mc') {
+                    if(Array.isArray(ans) && Array.isArray(q.ans)) {
+                        const isEq = ans.length === q.ans.length && ans.every(v => q.ans.includes(v));
+                        if(isEq) score += pointsPerQ;
+                    }
+                } else if (q.type === 'fill') {
+                    if(ans && ans.toLowerCase().trim() === q.ans.toLowerCase().trim()) {
+                        score += pointsPerQ;
+                    }
+                } else {
+                    if(ans === q.ans) score += pointsPerQ;
+                }
+            });
+
+            showResult(Math.round(score));
+        }
+
+        function showResult(finalScore) {
+            document.getElementById('exam-area').style.display = 'none';
+            document.getElementById('exam-result').style.display = 'block';
+            document.getElementById('result-name').innerText = studentName;
+            
+            let count = 0;
+            const scoreDisplay = document.getElementById('result-score');
+            const circle = document.getElementById('score-circle');
+            
+            circle.setAttribute('stroke-dasharray', `${finalScore}, 100`);
+            
+            if(finalScore < 60) {
+                circle.classList.remove('text-primary'); circle.classList.add('text-red-500');
+                scoreDisplay.classList.remove('text-primary'); scoreDisplay.classList.add('text-red-500');
+            } else if (finalScore < 80) {
+                circle.classList.remove('text-primary'); circle.classList.add('text-secondary');
+                scoreDisplay.classList.remove('text-primary'); scoreDisplay.classList.add('text-secondary');
+            }
+
+            const interval = setInterval(() => {
+                if(count >= finalScore) {
+                    clearInterval(interval);
+                    scoreDisplay.innerText = finalScore;
+                    
+                    // Kunci ujian agar siswa tidak bisa mengerjakan lagi (Simpan di LocalStorage)
+                    const studentId = (studentName + "_" + studentClass).toLowerCase().replace(/\s/g, '');
+                    localStorage.setItem('exam_completed_' + studentId, 'true');
+
+                    // Format durasi pengerjaan dari timeElapsed
+                    let m = Math.floor(timeElapsed / 60).toString().padStart(2, '0');
+                    let s = (timeElapsed % 60).toString().padStart(2, '0');
+                    let durasiPengerjaan = `${m} Menit ${s} Detik`;
+
+                    // Kirim ke Google Sheet setelah animasi selesai (Kirim Nama, Kelas, Nilai, Waktu Pengerjaan)
+                    sendToGoogleSheet(studentName, studentClass, finalScore, durasiPengerjaan);
+                } else {
+                    count++;
+                    scoreDisplay.innerText = count;
+                }
+            }, 20);
+        }
+
+        // --- Fungsi Kirim Data Ke Google Sheet ---
+        function sendToGoogleSheet(nama, kelas, nilai, waktuPengerjaan) {
+            // GANTI URL DI BAWAH DENGAN URL WEB APP GAS ANDA
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbxrUaw71psShmv7suXGoA8Ezq5UXAn-r4GCCpHQJfc5aJyPb_oE3gv2x5VksCt9aVca/exec'; 
+            
+            const statusBox = document.getElementById('sheet-status');
+
+            const formData = new FormData();
+            formData.append('Waktu', new Date().toLocaleString('id-ID'));
+            formData.append('Nama', nama);
+            formData.append('Kelas', kelas); // Menambahkan Kelas
+            formData.append('Nilai', nilai);
+            formData.append('Waktu_Pengerjaan', waktuPengerjaan); // Menambahkan Waktu Pengerjaan (Durasi)
+
+            fetch(scriptURL, { method: 'POST', body: formData })
+                .then(response => {
+                    statusBox.className = 'bg-green-50 border border-green-200 text-green-800 p-4 rounded-lg mb-6 flex items-start text-left';
+                    statusBox.innerHTML = `
+                        <i class="fa-solid fa-check-circle mt-1 mr-3 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold">Berhasil!</h4>
+                            <p class="text-sm">Data nilai telah direkam otomatis ke Google Spreadsheet.</p>
+                        </div>`;
+                })
+                .catch(error => {
+                    statusBox.className = 'bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg mb-6 flex items-start text-left';
+                    statusBox.innerHTML = `
+                        <i class="fa-solid fa-xmark-circle mt-1 mr-3 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold">Gagal Mengirim Data</h4>
+                            <p class="text-sm">Pastikan internet Anda lancar. Error: ${error.message}</p>
+                        </div>`;
+                });
+        }
+
+    </script>
+</body>
+</html>
