@@ -75,6 +75,7 @@
             font-weight: 600;
             color: #1e3a8a;
             transition: all 0.3s;
+            cursor: pointer; /* Untuk kemudahan di HP */
         }
         .drop-zone.hover { background: rgba(16, 185, 129, 0.2); border-color: #10B981; }
         .drop-zone.filled { background: #10B981; border-color: #059669; color: white; border-style: solid; font-size: 0.9rem;}
@@ -88,7 +89,7 @@
 
         .draggable-item {
             cursor: grab;
-            transition: transform 0.2s;
+            transition: all 0.2s;
             user-select: none;
             touch-action: none; /* For mobile dragging */
         }
@@ -141,24 +142,29 @@
         
         .nav-btn { transition: all 0.2s; }
         .nav-btn.active { background-color: #10B981; color: white; }
+
+        /* Tambahan CSS Responsif Mobile */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="text-gray-800 antialiased min-h-screen flex flex-col">
 
     <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <i class="fa-solid fa-stomach text-primary text-3xl mr-3"></i>
-                    <span class="font-display text-xl text-primary md:text-2xl tracking-wide">Sistem Pencernaan Makanan</span>
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center py-2 md:py-0 md:h-16">
+                <div class="flex items-center mb-2 md:mb-0 w-full justify-center md:justify-start shrink-0">
+                    <i class="fa-solid fa-stomach text-primary text-2xl md:text-3xl mr-2 md:mr-3"></i>
+                    <span class="font-display text-lg sm:text-xl text-primary md:text-2xl tracking-wide truncate">Sistem Pencernaan Makanan</span>
                 </div>
-                <div class="flex items-center space-x-2 md:space-x-4">
-                    <button onclick="switchPhase('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100 active">Home</button>
-                    <button onclick="switchPhase('memorize')" id="nav-memorize" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-book-open mr-1 hidden md:inline"></i>Memorize</button>
-                    <button onclick="switchPhase('recall')" id="nav-recall" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-gamepad mr-1 hidden md:inline"></i>Recall</button>
-                    <button onclick="switchPhase('exam')" id="nav-exam" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-pen-clip mr-1 hidden md:inline"></i>Exam</button>
-                    <button onclick="switchPhase('pengembang')" id="nav-pengembang" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-user-tie mr-1 hidden md:inline"></i>Pengembang</button>
-                    <button onclick="switchPhase('sumber')" id="nav-sumber" class="nav-btn px-3 py-2 rounded-md text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-link mr-1 hidden md:inline"></i>Sumber</button>
+                <!-- Menu bisa di-scroll ke samping pada tampilan HP -->
+                <div class="flex items-center space-x-2 md:space-x-4 w-full md:w-auto overflow-x-auto hide-scrollbar pb-1 md:pb-0 px-2 md:px-0 justify-start md:justify-end">
+                    <button onclick="switchPhase('home')" id="nav-home" class="nav-btn whitespace-nowrap px-3 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-gray-100 active">Home</button>
+                    <button onclick="switchPhase('memorize')" id="nav-memorize" class="nav-btn whitespace-nowrap px-3 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-book-open mr-1 hidden md:inline"></i>Memorize</button>
+                    <button onclick="switchPhase('recall')" id="nav-recall" class="nav-btn whitespace-nowrap px-3 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-gamepad mr-1 hidden md:inline"></i>Recall</button>
+                    <button onclick="switchPhase('exam')" id="nav-exam" class="nav-btn whitespace-nowrap px-3 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-pen-clip mr-1 hidden md:inline"></i>Exam</button>
+                    <button onclick="switchPhase('pengembang')" id="nav-pengembang" class="nav-btn whitespace-nowrap px-3 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-user-tie mr-1 hidden md:inline"></i>Pengembang</button>
+                    <button onclick="switchPhase('sumber')" id="nav-sumber" class="nav-btn whitespace-nowrap px-3 py-2 rounded-md text-xs sm:text-sm font-medium hover:bg-gray-100"><i class="fa-solid fa-link mr-1 hidden md:inline"></i>Sumber</button>
                 </div>
             </div>
         </div>
@@ -168,14 +174,14 @@
     <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         <section id="phase-home" class="phase-section active">
-            <!-- Petunjuk Penggunaan Media DIPINDAHKAN KE ATAS -->
-            <div class="bg-blue-50 border-l-4 border-accent p-6 rounded-xl shadow-md mb-8">
+            <!-- Petunjuk Penggunaan Media -->
+            <div class="bg-blue-50 border-l-4 border-accent p-6 rounded-r-xl shadow-md mb-8">
                 <h3 class="font-bold text-lg text-accent mb-3"><i class="fa-solid fa-circle-info mr-2"></i>Petunjuk Penggunaan Media:</h3>
                 <ol class="list-decimal list-inside text-gray-700 space-y-2 text-sm">
                     <li>Media pembelajaran IPA Kelas 8 Materi Sistem Pencernaan Makanan pada manusia terdiri dari 3 Fase yaitu Memorize, Recall dan Exam.</li>
                     <li>Setiap Fase harus dipelajari secara berurutan. Pengguna tidak dapat melewati fase secara acak.</li>
                     <li>Di setiap fase ada tombol ceklist yang menandakan materi tersebut telah dipelajari. Silahkan klik ceklist tersebut.</li>
-                    <li>Pada Fase Exam, peserta <strong>WAJIB</strong> menuliskan Nama lengkap beserta kelas sebagai hasil belajar. Peserta hanya dapat melakukan exam atau ujian sekali saja (tidak ada pengulangan).</li>
+                    <li>Pada Fase Exam, peserta <strong>WAJIB</strong> menuliskan Nama lengkap, Kelas, dan Asal Sekolah sebagai hasil belajar. Peserta hanya dapat melakukan exam atau ujian sekali saja (tidak ada pengulangan).</li>
                     <li>Selamat belajar secara mandiri. Jika ada yang belum dipahami silahkan menghubungi <a href="#" class="text-accent font-bold hover:underline">@pagurudan</a>.</li>
                 </ol>
             </div>
@@ -225,18 +231,13 @@
         <section id="phase-memorize" class="phase-section">
             <div class="text-center mb-8">
                 <h2 class="font-display text-3xl text-dark">Fase Memorize: Eksplorasi Materi</h2>
-                <p class="text-gray-600 mt-2">Pahami organ-organ dan proses pencernaan secara mendalam.</p>
-            </div>
-
-            <!-- Progress Bar Memorize -->
-            <div class="max-w-3xl mx-auto mb-8 bg-white p-5 rounded-xl shadow-md border border-gray-100">
-                <div class="flex justify-between items-center mb-3">
-                    <span class="text-sm font-bold text-gray-600"><i class="fa-solid fa-chart-line mr-2 text-primary"></i>Progres Belajar:</span>
-                    <span id="memorize-progress-text" class="text-sm font-bold text-primary bg-green-50 px-3 py-1 rounded-full">0%</span>
+                <p class="text-gray-600 mt-2 mb-4">Pahami organ-organ dan proses pencernaan secara mendalam.</p>
+                
+                <!-- Progress Bar Memorize -->
+                <div class="max-w-2xl mx-auto bg-gray-200 rounded-full h-3 mb-2 overflow-hidden">
+                    <div id="memorize-progress-bar" class="bg-primary h-3 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div id="memorize-progress-bar" class="bg-primary h-3 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-                </div>
+                <p class="text-xs text-gray-500 font-semibold" id="memorize-progress-text">Progres: 0 / 8 Selesai</p>
             </div>
 
             <div class="bg-white rounded-xl shadow-lg p-6 md:p-10 mb-8">
@@ -245,7 +246,7 @@
                     <p>Sistem pencernaan atau sistem gastrointestinal adalah serangkaian organ yang memiliki fungsi untuk mencerna makanan. Organ-organ ini mengolah makanan utuh menjadi zat-zat makanan (nutrisi) yang dapat diserap oleh tubuh untuk mendapatkan sumber energi.</p>
                     
                     <div class="mt-4 flex items-center bg-blue-50 p-3 rounded-lg border border-blue-100 max-w-sm">
-                        <input type="checkbox" id="check-pendahuluan" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                        <input type="checkbox" id="check-pendahuluan" onchange="updateMemorizeProgress()" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
                         <label for="check-pendahuluan" class="ml-3 text-sm font-bold text-gray-700 cursor-pointer">Saya telah memahami materi ini</label>
                     </div>
 
@@ -270,7 +271,7 @@
                     </div>
 
                     <div class="mb-8 flex items-center bg-blue-50 p-3 rounded-lg border border-blue-100 max-w-sm">
-                        <input type="checkbox" id="check-macam" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                        <input type="checkbox" id="check-macam" onchange="updateMemorizeProgress()" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
                         <label for="check-macam" class="ml-3 text-sm font-bold text-gray-700 cursor-pointer">Saya paham macam proses pencernaan</label>
                     </div>
 
@@ -283,7 +284,7 @@
                             <img src="https://www.image2url.com/r2/default/images/1787398243338-567715ec-7cf5-4c6a-b4ce-33cb79a0a0e5.jpg" alt="Anatomi Mulut" class="w-full rounded mb-4">
                             <p class="text-sm">Tempat masuknya makanan. Terjadi pencernaan <strong>mekanik oleh gigi</strong> (menghancurkan makanan) dan <strong>kimiawi oleh enzim amilase</strong> (mengubah amilum/pati menjadi gula sederhana). Enzim ini diproduksi kelenjar ludah. Lidah berfungsi mengaduk makanan.</p>
                             <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
-                                <input type="checkbox" id="check-mulut" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <input type="checkbox" id="check-mulut" onchange="updateMemorizeProgress()" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
                                 <label for="check-mulut" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
                             </div>
                         </div>
@@ -293,7 +294,7 @@
                             <img src="https://www.image2url.com/r2/default/images/1787398241424-a176debe-608d-4a67-9818-fea3944d15e5.jpg" alt="Faring dan Esofagus" class="w-full rounded mb-4">
                             <p class="text-sm"><strong>Tenggorokan (Faring)</strong> menghubungkan rongga mulut ke kerongkongan. <strong>Kerongkongan (Esofagus)</strong> melakukan <strong>Gerakan Peristaltik</strong> (meremas-remas) untuk mendorong makanan menuju lambung.</p>
                             <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
-                                <input type="checkbox" id="check-faring" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <input type="checkbox" id="check-faring" onchange="updateMemorizeProgress()" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
                                 <label for="check-faring" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
                             </div>
                         </div>
@@ -311,7 +312,7 @@
                                 <li><strong>Asam Klorida (HCl):</strong> Membunuh kuman & mengaktifkan pepsin.</li>
                             </ul>
                             <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
-                                <input type="checkbox" id="check-lambung" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <input type="checkbox" id="check-lambung" onchange="updateMemorizeProgress()" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
                                 <label for="check-lambung" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
                             </div>
                         </div>
@@ -325,13 +326,13 @@
                                 <li><strong>Pankreas:</strong> Produksi enzim (Amilase, Lipase, Tripsin) dan senyawa bikarbonat penetral asam lambung.</li>
                             </ul>
                             <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
-                                <input type="checkbox" id="check-kelenjar" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <input type="checkbox" id="check-kelenjar" onchange="updateMemorizeProgress()" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
                                 <label for="check-kelenjar" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Organ 5 & 6 (Revisi Penjelasan Enzim Usus Halus) -->
+                    <!-- Organ 5 & 6 -->
                     <div class="grid md:grid-cols-2 gap-8 mb-6">
                         <div class="materi-card bg-white border border-gray-100 rounded-xl shadow-md p-6">
                             <h4 class="text-xl font-bold mb-3 flex items-center"><span class="bg-primary text-white w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">5</span> Usus Halus</h4>
@@ -348,7 +349,7 @@
                                 <li><strong>Jejunum (Kosong) & Ileum (Penyerapan):</strong> Tempat utama penyerapan sari-sari makanan ke dalam darah. Permukaannya dipenuhi Vili (jonjot usus) untuk memperluas area penyerapan.</li>
                             </ul>
                             <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
-                                <input type="checkbox" id="check-usus-halus" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <input type="checkbox" id="check-usus-halus" onchange="updateMemorizeProgress()" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
                                 <label for="check-usus-halus" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
                             </div>
                         </div>
@@ -360,7 +361,7 @@
                             <p class="text-sm mt-2"><strong>Rektum:</strong> Tempat simpan feses sementara.</p>
                             <p class="text-sm mt-2"><strong>Anus:</strong> Saluran pembuangan feses dari tubuh.</p>
                             <div class="mt-4 flex items-center pt-3 border-t border-gray-100">
-                                <input type="checkbox" id="check-usus-besar" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
+                                <input type="checkbox" id="check-usus-besar" onchange="updateMemorizeProgress()" class="w-5 h-5 text-primary rounded focus:ring-primary memorize-check cursor-pointer">
                                 <label for="check-usus-besar" class="ml-3 text-sm font-medium text-gray-700 cursor-pointer">Tandai Selesai</label>
                             </div>
                         </div>
@@ -374,22 +375,16 @@
             </div>
         </section>
 
-        <!-- RECALL PHASE -->
         <section id="phase-recall" class="phase-section">
             <div class="text-center mb-6">
                 <h2 class="font-display text-3xl text-dark">Fase Recall: Uji Ingatanmu</h2>
                 <p class="text-gray-600 mt-2">Pilih mode permainan untuk mengasah ingatanmu tentang materi pencernaan.</p>
-            </div>
-
-            <!-- Progress Bar Recall -->
-            <div class="max-w-xl mx-auto mb-8 bg-white p-5 rounded-xl shadow-md border border-gray-100">
-                <div class="flex justify-between items-center mb-3">
-                    <span class="text-sm font-bold text-gray-600"><i class="fa-solid fa-trophy mr-2 text-secondary"></i>Progres Latihan:</span>
-                    <span id="recall-progress-text" class="text-sm font-bold text-secondary bg-yellow-50 px-3 py-1 rounded-full">0%</span>
+                
+                <!-- Progress Bar Recall -->
+                <div class="max-w-md mx-auto mt-4 mb-2 bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                    <div id="recall-progress-bar" class="bg-secondary h-2.5 rounded-full transition-all duration-500 ease-out" style="width: 0%"></div>
                 </div>
-                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div id="recall-progress-bar" class="bg-secondary h-3 rounded-full transition-all duration-700 ease-out" style="width: 0%"></div>
-                </div>
+                <p class="text-xs text-gray-500 font-semibold" id="recall-progress-text">Progres Permainan: 0 / 2 Selesai</p>
             </div>
 
             <!-- Game Tabs -->
@@ -411,34 +406,34 @@
                     <!-- Image Container -->
                     <div class="md:w-1/2">
                         <div id="dnd-container" class="shadow-sm w-full">
-                            <img src="https://www.image2url.com/r2/default/images/1787403952576-32bb4247-2d3f-4e60-95fb-3c5a8cbcaf7a.png" id="dnd-image" alt="Anatomi Pencernaan" class="w-full h-auto object-contain bg-white border border-gray-200">
+                            <img src="https://www.image2url.com/r2/default/images/1787403952576-32bb4247-2d3f-4e60-95fb-3c5a8cbcaf7a.png" id="dnd-image" alt="Anatomi Pencernaan" class="w-full h-auto object-contain bg-white border border-gray-200 rounded-lg">
                         </div>
                     </div>
 
                     <!-- Table and Labels Container -->
                     <div class="md:w-1/2 flex flex-col">
-                        <p class="text-sm text-gray-600 mb-5 bg-blue-50 p-4 rounded-lg border border-blue-100 leading-relaxed"><i class="fa-solid fa-circle-info mr-2 text-accent"></i><strong>Petunjuk:</strong> Perhatikan nomor pada gambar di samping. Tarik (drag) label organ di bawah ini dan letakkan pada kotak di dalam tabel yang sesuai dengan nomornya.</p>
+                        <p class="text-sm text-gray-600 mb-5 bg-blue-50 p-4 rounded-lg border border-blue-100 leading-relaxed"><i class="fa-solid fa-circle-info mr-2 text-accent"></i><strong>Petunjuk:</strong> Perhatikan nomor pada gambar di samping. Tarik (drag) atau <strong>klik/sentuh</strong> label organ di bawah ini lalu letakkan pada kotak di dalam tabel yang sesuai dengan nomornya.</p>
                         
                         <!-- Draggable Labels -->
                         <div class="mb-6">
                             <div id="labels-container" class="flex flex-wrap gap-2">
-                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="mulut">Mulut</div>
-                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="kerongkongan">Kerongkongan</div>
-                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="lambung">Lambung</div>
-                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="hati">Hati</div>
-                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="pankreas">Pankreas</div>
-                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="usus-halus">Usus Halus</div>
-                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="usus-besar">Usus Besar</div>
-                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600" data-id="anus">Anus</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600 cursor-pointer" data-id="mulut">Mulut</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600 cursor-pointer" data-id="kerongkongan">Kerongkongan</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600 cursor-pointer" data-id="lambung">Lambung</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600 cursor-pointer" data-id="hati">Hati</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600 cursor-pointer" data-id="pankreas">Pankreas</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600 cursor-pointer" data-id="usus-halus">Usus Halus</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600 cursor-pointer" data-id="usus-besar">Usus Besar</div>
+                                <div draggable="true" class="draggable-item bg-accent text-white px-3 py-2 rounded-lg shadow-md text-sm font-semibold hover:bg-blue-600 cursor-pointer" data-id="anus">Anus</div>
                             </div>
                         </div>
 
                         <!-- Target Table -->
-                        <div class="overflow-hidden rounded-lg border border-gray-200 shadow-sm flex-grow">
-                            <table class="w-full text-sm text-left">
+                        <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm flex-grow">
+                            <table class="w-full text-sm text-left whitespace-nowrap md:whitespace-normal">
                                 <thead class="bg-gray-100 text-gray-700">
                                     <tr>
-                                        <th scope="col" class="px-4 py-3 w-20 text-center border-b font-bold">Nomor</th>
+                                        <th scope="col" class="px-4 py-3 w-16 md:w-20 text-center border-b font-bold">Nomor</th>
                                         <th scope="col" class="px-4 py-3 border-b font-bold">Label Organ (Area Target)</th>
                                     </tr>
                                 </thead>
@@ -486,7 +481,7 @@
                 </div>
             </div>
 
-            <!-- Game 2: Flashcards (Revisi Soal Menjadi 10) -->
+            <!-- Game 2: Flashcards -->
             <div id="game-flashcard" class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-2xl mx-auto border-t-4 border-secondary hidden">
                  <div class="flex justify-between items-center mb-6">
                     <h3 class="text-xl font-bold text-dark"><i class="fa-solid fa-clone text-secondary mr-2"></i>Kartu Ingatan (Flashcard)</h3>
@@ -497,12 +492,12 @@
                     <div class="flip-card-inner">
                         <div class="flip-card-front shadow-lg">
                             <span class="text-gray-400 text-sm absolute top-4 left-4 uppercase tracking-widest"><i class="fa-solid fa-question-circle mr-1"></i>Istilah</span>
-                            <h2 id="fc-term" class="text-3xl font-display text-accent mt-4 px-4 leading-tight">Enzim Amilase</h2>
+                            <h2 id="fc-term" class="text-2xl md:text-3xl font-display text-accent mt-4 px-4 leading-tight">Enzim Amilase</h2>
                             <p class="text-xs text-gray-400 absolute bottom-4">(Klik kartu untuk melihat arti)</p>
                         </div>
                         <div class="flip-card-back shadow-lg">
                             <span class="text-green-200 text-sm absolute top-4 left-4 uppercase tracking-widest"><i class="fa-solid fa-lightbulb mr-1"></i>Pembahasan</span>
-                            <p id="fc-def" class="text-lg font-medium text-center mt-4 px-6 leading-relaxed">Berfungsi mengubah pati atau amilum menjadi gula sederhana. Dihasilkan oleh kelenjar ludah di mulut dan pankreas.</p>
+                            <p id="fc-def" class="text-base md:text-lg font-medium text-center mt-4 px-6 leading-relaxed">Berfungsi mengubah pati atau amilum menjadi gula sederhana. Dihasilkan oleh kelenjar ludah di mulut dan pankreas.</p>
                         </div>
                     </div>
                 </div>
@@ -520,7 +515,6 @@
             </div>
         </section>
 
-        <!-- EXAM PHASE -->
         <section id="phase-exam" class="phase-section">
             
             <!-- Intro Exam Form -->
@@ -529,23 +523,23 @@
                 <h2 class="font-display text-2xl text-dark mb-2">Uji Pemahaman</h2>
                 <p class="text-gray-600 text-sm mb-6">Kerjakan 20 soal variatif untuk menguji pemahamanmu. Nilai akan direkam.</p>
                 
-                <div class="mb-6 text-left">
+                <div class="mb-4 text-left">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="studentName">Nama Lengkap Siswa</label>
                     <input class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="studentName" type="text" placeholder="Masukkan nama Anda...">
                 </div>
 
-                <div class="mb-6 text-left">
+                <div class="mb-4 text-left">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="studentClass">Kelas</label>
                     <input class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="studentClass" type="text" placeholder="Contoh: VIII A">
                 </div>
 
                 <div class="mb-6 text-left">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="studentSchool">Nama Sekolah</label>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="studentSchool">Asal Sekolah</label>
                     <input class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="studentSchool" type="text" placeholder="Contoh: SMP Negeri 2 Ende">
                 </div>
                 
                 <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left text-xs text-yellow-800">
-                    <p><strong>Info:</strong> Pastikan Anda terkoneksi internet. Nilai akan otomatis dikirimkan ke Google Spreadsheet Guru setelah selesai ujian. <strong>Ujian hanya dapat dilakukan 1 kali.</strong></p>
+                    <p><strong>Info:</strong> Pastikan Anda terkoneksi internet. Nilai akan otomatis dikirimkan ke Guru. <strong>Ujian hanya dapat dilakukan 1 kali.</strong></p>
                 </div>
 
                 <button onclick="startExam()" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline transition-colors">
@@ -557,15 +551,15 @@
             <div id="exam-area" class="bg-white rounded-xl shadow-lg p-6 md:p-10 max-w-3xl mx-auto hidden border-t-4 border-primary">
                 <div class="flex justify-between items-center mb-6 pb-4 border-b">
                     <span class="font-bold text-gray-500 uppercase tracking-wider text-sm">Soal <span id="q-current" class="text-primary text-lg">1</span> / 20</span>
-                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-semibold"><i class="fa-regular fa-clock mr-1"></i> <span id="exam-timer">--:--</span></span>
+                    <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-semibold"><i class="fa-regular fa-clock mr-1"></i> <span id="exam-timer">00:00</span></span>
                 </div>
                 
                 <!-- Question Container rendered by JS -->
                 <div id="question-container" class="min-h-[200px]"></div>
 
-                <div class="flex justify-between mt-8 pt-4 border-t">
+                <div class="flex flex-col-reverse sm:flex-row justify-between mt-8 pt-4 border-t gap-3">
                     <button id="btn-prev-q" onclick="prevQuestion()" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 hidden">Sebelumnya</button>
-                    <div class="flex-grow"></div>
+                    <div class="flex-grow hidden sm:block"></div>
                     <button id="btn-next-q" onclick="nextQuestion()" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-green-600">Selanjutnya</button>
                     <button id="btn-submit-q" onclick="submitExam()" class="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 hidden font-bold"><i class="fa-solid fa-paper-plane mr-2"></i>Kumpulkan Jawaban</button>
                 </div>
@@ -592,65 +586,61 @@
                     </div>
                 </div>
 
-                <button onclick="location.reload()" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-6 rounded-lg transition-colors">Kembali ke Beranda</button>
+                <button onclick="location.reload()" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-6 rounded-lg transition-colors w-full">Kembali ke Beranda</button>
             </div>
-
         </section>
 
-        <!-- PENGEMBANG PHASE -->
         <section id="phase-pengembang" class="phase-section">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="font-display text-3xl text-dark text-center mb-8">Profil Pengembang</h2>
-                
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden border-t-4 border-accent">
-                    <div class="bg-blue-50 p-8 text-center border-b border-blue-100">
-                        <img src="https://www.image2url.com/r2/default/images/1787417552216-3f3fe7e5-bc7b-4da1-b496-4ca3d251d6ed.png" alt="Danar Wulan, S.Si" class="w-28 h-28 object-cover bg-white border-4 border-accent rounded-full mx-auto mb-4 shadow-md">
-                        <h3 class="font-display text-2xl text-dark">Danar Wulan, S.Si</h3>
-                        <p class="text-accent font-semibold mt-1">Guru IPA - SMP Negeri 2 Ende</p>
-                        <p class="text-sm text-gray-500 mt-2">NIP: 198508152017081001</p>
+            <div class="text-center mb-8">
+                <h2 class="font-display text-3xl text-dark">Profil Pengembang</h2>
+                <p class="text-gray-600 mt-2">Kreator di balik media pembelajaran ini.</p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-8 max-w-3xl mx-auto border-t-4 border-primary">
+                <div class="flex flex-col md:flex-row items-center md:items-start gap-8">
+                    <div class="w-40 h-40 shrink-0 border-4 border-gray-100 shadow-md rounded-full overflow-hidden">
+                        <img src="https://www.image2url.com/r2/default/images/1787417552216-3f3fe7e5-bc7b-4da1-b496-4ca3d251d6ed.png" alt="Danar Wulan" class="w-full h-full object-cover">
                     </div>
-                    
-                    <div class="p-6 md:p-10 space-y-8">
-                        <div>
-                            <h4 class="text-lg font-bold text-dark border-b-2 border-gray-100 pb-2 mb-4 flex items-center"><i class="fa-solid fa-bullseye text-accent mr-3"></i> Profil Professional</h4>
-                            <p class="text-gray-700 text-sm leading-relaxed">Pendidik IPA di SMP Negeri 2 Ende yang berfokus pada inovasi pedagogi dan integrasi teknologi dalam pembelajaran.</p>
-                        </div>
-
-                        <div>
-                            <h4 class="text-lg font-bold text-dark border-b-2 border-gray-100 pb-2 mb-4 flex items-center"><i class="fa-solid fa-certificate text-secondary mr-3"></i> Sertifikasi & Keahlian Digital</h4>
-                            <ul class="list-disc list-inside text-gray-700 text-sm space-y-2">
-                                <li>Google Certified Trainer</li>
-                                <li>Gemini Certified Educator</li>
-                                <li>Trainer Resmi Quizizz & Wayground</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 class="text-lg font-bold text-dark border-b-2 border-gray-100 pb-2 mb-4 flex items-center"><i class="fa-solid fa-route text-primary mr-3"></i> Rekam Jejak Program & Mentorship</h4>
-                            <ul class="list-disc list-inside text-gray-700 text-sm space-y-2">
-                                <li>Pengajar Praktik – Program Guru Penggerak (Angkatan 10)</li>
-                                <li>Guru Penggerak – Program Guru Penggerak (Angkatan 3)</li>
-                                <li>Mentor Digital – Google Certified Educator Level 1 & Level 2</li>
-                                <li>Mentor KSRG – Kandidat Sekolah Rujukan Google</li>
-                                <li>Pendamping Satuan Pendidikan – Akselerasi Pemfokusan Pembelajaran</li>
-                                <li>Sahabat Rumah Belajar – Pemanfataan Portal Pembelajaran Kemendikbudristek</li>
-                            </ul>
-                        </div>
-
-                        <div>
-                            <h4 class="text-lg font-bold text-dark border-b-2 border-gray-100 pb-2 mb-4 flex items-center"><i class="fa-solid fa-trophy text-yellow-500 mr-3"></i> Prestasi & Penghargaan</h4>
-                            <ul class="list-disc list-inside text-gray-700 text-sm space-y-2">
-                                <li>Terbaik 1 Guru SMP Inovatif Tingkat Provinsi Nusa Tenggara Timur (NTT)</li>
-                                <li>Sahabat Rumah Belajar 2010</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                            <h4 class="text-lg font-bold text-dark mb-4 flex items-center"><i class="fa-regular fa-address-card text-accent mr-3"></i> Informasi Kontak</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
-                                <div class="flex items-center"><i class="fa-solid fa-envelope w-6 text-gray-400"></i> danarwulan58@guru.smp.belajar.id</div>
-                                <div class="flex items-center"><i class="fa-brands fa-whatsapp w-6 text-green-500"></i> 082237142381</div>
-                                <div class="flex items-center"><i class="fa-solid fa-globe w-6 text-blue-500"></i> <a href="https://pagurudan.my.id" target="_blank" class="hover:underline hover:text-accent">pagurudan.my.id</a></div>
+                    <div class="text-left w-full">
+                        <h3 class="text-2xl font-bold text-dark mb-1">Danar Wulan, S.Si</h3>
+                        <p class="text-primary font-semibold mb-4">Guru IPA - SMP Negeri 2 Ende</p>
+                        
+                        <p class="text-gray-600 mb-6 italic border-l-4 border-gray-300 pl-4">Pendidik IPA di SMP Negeri 2 Ende yang berfokus pada inovasi pedagogi dan integrasi teknologi dalam pembelajaran.</p>
+                        
+                        <div class="grid md:grid-cols-2 gap-4 text-sm text-gray-700">
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-2 border-b pb-1"><i class="fa-solid fa-id-card mr-2 text-accent"></i>Data Instansi</h4>
+                                <ul class="space-y-1">
+                                    <li><strong>NIP:</strong> 198508152017081001</li>
+                                    <li><strong>Instansi:</strong> SMP Negeri 2 Ende</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 mb-2 border-b pb-1"><i class="fa-solid fa-certificate mr-2 text-secondary"></i>Sertifikasi Digital</h4>
+                                <ul class="space-y-1 list-disc list-inside">
+                                    <li>Google Certified Trainer</li>
+                                    <li>Gemini Certified Educator</li>
+                                    <li>Trainer Resmi Quizizz & Wayground</li>
+                                </ul>
+                            </div>
+                            <div class="md:col-span-2 mt-2">
+                                <h4 class="font-bold text-gray-900 mb-2 border-b pb-1"><i class="fa-solid fa-award mr-2 text-primary"></i>Rekam Jejak & Prestasi</h4>
+                                <ul class="space-y-1 list-disc list-inside">
+                                    <li>Pengajar Praktik & Guru Penggerak (Angkatan 3 & 10)</li>
+                                    <li>Mentor Digital – Google Certified Educator L1 & L2</li>
+                                    <li>Mentor Kandidat Sekolah Rujukan Google (KSRG)</li>
+                                    <li>Pendamping Satuan Pendidikan</li>
+                                    <li>Terbaik 1 Guru SMP Inovatif Tingkat Provinsi NTT</li>
+                                    <li>Sahabat Rumah Belajar 2010</li>
+                                </ul>
+                            </div>
+                            <div class="md:col-span-2 mt-2">
+                                <h4 class="font-bold text-gray-900 mb-2 border-b pb-1"><i class="fa-solid fa-address-book mr-2 text-gray-500"></i>Kontak</h4>
+                                <ul class="space-y-1">
+                                    <li><i class="fa-solid fa-envelope mr-2"></i>danarwulan58@guru.smp.belajar.id</li>
+                                    <li><i class="fa-brands fa-whatsapp mr-2"></i>082237142381</li>
+                                    <li><i class="fa-solid fa-globe mr-2"></i>pagurudan.my.id</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -658,35 +648,31 @@
             </div>
         </section>
 
-        <!-- SUMBER PHASE -->
         <section id="phase-sumber" class="phase-section">
-            <div class="max-w-3xl mx-auto">
-                <h2 class="font-display text-3xl text-dark text-center mb-8">Sumber Materi Pembelajaran</h2>
-                
-                <div class="bg-white rounded-xl shadow-lg p-8 border-t-4 border-secondary">
-                    <p class="text-gray-600 mb-6 text-sm">Materi dan referensi yang digunakan dalam pengembangan media pembelajaran interaktif ini bersumber dari tautan berikut:</p>
-                    
-                    <ul class="space-y-4">
-                        <li class="flex items-start">
-                            <div class="flex-shrink-0 mt-1">
-                                <i class="fa-solid fa-link text-secondary"></i>
-                            </div>
-                            <div class="ml-3">
-                                <a href="https://www.ruangguru.com/blog/medan-listrik-fisika-smp-kelas-9" target="_blank" class="text-accent hover:underline font-medium text-sm break-all">https://www.ruangguru.com/blog/medan-listrik-fisika-smp-kelas-9</a>
-                            </div>
-                        </li>
-                        <li class="flex items-start">
-                            <div class="flex-shrink-0 mt-1">
-                                <i class="fa-solid fa-link text-secondary"></i>
-                            </div>
-                            <div class="ml-3">
-                                <a href="https://buku.kemendikdasmen.go.id/katalog/ilmu-pengetahuan-alam-untuk-smp-mts-kelas-viii-edisi-revisi" target="_blank" class="text-accent hover:underline font-medium text-sm break-all">https://buku.kemendikdasmen.go.id/katalog/ilmu-pengetahuan-alam-untuk-smp-mts-kelas-viii-edisi-revisi</a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+            <div class="text-center mb-8">
+                <h2 class="font-display text-3xl text-dark">Sumber Referensi</h2>
+                <p class="text-gray-600 mt-2">Referensi yang digunakan dalam penyusunan media ini.</p>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-8 max-w-3xl mx-auto border-t-4 border-secondary">
+                <ul class="space-y-4 text-gray-700">
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-book text-primary mt-1 mr-3"></i>
+                        <div>
+                            <p class="font-bold">Buku IPA SMP/MTs Kelas VIII (Edisi Revisi) - Kemendikdasmen</p>
+                            <a href="https://buku.kemendikdasmen.go.id/katalog/ilmu-pengetahuan-alam-untuk-smp-mts-kelas-viii-edisi-revisi" target="_blank" class="text-sm text-accent hover:underline break-all">Lihat Buku</a>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fa-solid fa-globe text-primary mt-1 mr-3"></i>
+                        <div>
+                            <p class="font-bold">Artikel Referensi Edukasi</p>
+                            <a href="https://www.ruangguru.com/blog/medan-listrik-fisika-smp-kelas-9" target="_blank" class="text-sm text-accent hover:underline break-all">RuangGuru - Referensi Terkait</a>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </section>
+
     </main>
 
     <footer class="bg-white border-t py-6 text-center text-gray-500 text-sm mt-auto">
@@ -701,36 +687,25 @@
         let isFlashcardCompleted = false;
         let viewedFlashcards = new Set([0]); // Set melacak indeks flashcard yg dibaca
 
-        // Fungsi Update Progress Bar Memorize
         function updateMemorizeProgress() {
             const checks = document.querySelectorAll('.memorize-check');
             let checkedCount = 0;
             checks.forEach(check => {
-                if (check.checked) checkedCount++;
+                if(check.checked) checkedCount++;
             });
-            const percentage = Math.round((checkedCount / checks.length) * 100);
-            
-            document.getElementById('memorize-progress-bar').style.width = percentage + '%';
-            document.getElementById('memorize-progress-text').innerText = percentage + '%';
+            const progress = (checkedCount / checks.length) * 100;
+            document.getElementById('memorize-progress-bar').style.width = `${progress}%`;
+            document.getElementById('memorize-progress-text').innerText = `Progres: ${checkedCount} / ${checks.length} Selesai`;
         }
 
-        // Listener untuk setiap ceklist di Memorize
-        document.addEventListener('DOMContentLoaded', () => {
-            const checks = document.querySelectorAll('.memorize-check');
-            checks.forEach(check => {
-                check.addEventListener('change', updateMemorizeProgress);
-            });
-        });
-
-        // Fungsi Update Progress Bar Recall
         function updateRecallProgress() {
-            let tasksCompleted = 0;
-            if(isDndCompleted) tasksCompleted++;
-            if(isFlashcardCompleted) tasksCompleted++;
+            let completed = 0;
+            if(isDndCompleted) completed++;
+            if(isFlashcardCompleted) completed++;
             
-            const percentage = Math.round((tasksCompleted / 2) * 100);
-            document.getElementById('recall-progress-bar').style.width = percentage + '%';
-            document.getElementById('recall-progress-text').innerText = percentage + '%';
+            const progress = (completed / 2) * 100;
+            document.getElementById('recall-progress-bar').style.width = `${progress}%`;
+            document.getElementById('recall-progress-text').innerText = `Progres Permainan: ${completed} / 2 Selesai`;
         }
 
         function checkMemorizeCompleted() {
@@ -798,35 +773,60 @@
             }
         }
 
-        // --- Drag and Drop Logic ---
+        // --- STREAMING_CHUNK:Logika Drag & Drop (PC & Mobile)... ---
         const draggables = document.querySelectorAll('.draggable-item');
         const dropZones = document.querySelectorAll('.drop-zone');
         let dndScore = 0;
-        const totalDnd = 8; // Diupdate menjadi 8 karena ada Pankreas
+        const totalDnd = 8;
+        let selectedLabelId = null; // Variabel penyimpan state klik (Untuk Mobile)
 
         // Fungsi untuk mengacak urutan label organ agar tidak mudah ditebak
         function shuffleLabels() {
             const container = document.getElementById('labels-container');
-            for (let i = container.children.length; i >= 0; i--) {
-                container.appendChild(container.children[Math.random() * i | 0]);
+            const elementsArray = Array.prototype.slice.call(container.children);
+            
+            // Pengacakan (Fisher-Yates)
+            for (let i = elementsArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [elementsArray[i], elementsArray[j]] = [elementsArray[j], elementsArray[i]];
             }
+            
+            container.innerHTML = '';
+            elementsArray.forEach(function(element){
+                container.appendChild(element);
+            });
         }
         
-        // Panggil fungsi acak saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', shuffleLabels);
+        // Panggil shuffle saat pertama load
+        shuffleLabels();
 
         draggables.forEach(draggable => {
-            draggable.addEventListener('dragstart', () => {
+            // Drag untuk PC
+            draggable.addEventListener('dragstart', (event) => {
                 draggable.classList.add('dragging');
                 event.dataTransfer.setData('text/plain', draggable.dataset.id);
             });
             draggable.addEventListener('dragend', () => {
                 draggable.classList.remove('dragging');
             });
+            
+            // Event Click untuk kompatibilitas HP (Mobile)
+            draggable.addEventListener('click', () => {
+                draggables.forEach(d => d.classList.remove('ring-4', 'ring-yellow-400', 'scale-110'));
+                
+                if (selectedLabelId === draggable.dataset.id) {
+                    selectedLabelId = null;
+                } else {
+                    selectedLabelId = draggable.dataset.id;
+                    draggable.classList.add('ring-4', 'ring-yellow-400', 'scale-110');
+                }
+            });
+
             draggable.addEventListener('touchstart', (e) => {}, {passive:true});
         });
 
         dropZones.forEach(zone => {
+            // Drop untuk PC
             zone.addEventListener('dragover', e => {
                 e.preventDefault(); 
                 zone.classList.add('hover');
@@ -866,6 +866,39 @@
                     showDndFeedback(`Oops, posisi kurang tepat. Coba lagi!`, 'error');
                 }
             });
+            
+            // Event Click pada Drop Zone (Untuk HP/Mobile)
+            zone.addEventListener('click', () => {
+                if (!selectedLabelId || zone.classList.contains('filled')) return;
+
+                const targetId = zone.dataset.target;
+
+                if (selectedLabelId === targetId) {
+                    zone.classList.add('filled');
+                    const draggedElement = document.querySelector(`.draggable-item[data-id="${selectedLabelId}"]`);
+                    zone.innerHTML = draggedElement.innerText;
+                    
+                    draggedElement.classList.add('hidden-item');
+                    draggedElement.classList.remove('ring-4', 'ring-yellow-400', 'scale-110');
+                    selectedLabelId = null; // Reset
+                    
+                    dndScore++;
+                    updateStars();
+                    showDndFeedback(`Benar! Itu adalah ${draggedElement.innerText}.`, 'success');
+
+                    if(dndScore === totalDnd) {
+                        isDndCompleted = true; 
+                        updateRecallProgress(); 
+                        setTimeout(() => {
+                            Swal.fire('Luar Biasa!', 'Kamu berhasil menyusun semua 8 organ dengan benar!', 'success');
+                        }, 500);
+                    }
+                } else {
+                    zone.classList.add('wrong');
+                    setTimeout(() => zone.classList.remove('wrong'), 500);
+                    showDndFeedback(`Oops, posisi kurang tepat. Coba lagi!`, 'error');
+                }
+            });
         });
 
         function updateStars() {
@@ -892,18 +925,19 @@
 
         function resetDnd() {
             dndScore = 0;
+            selectedLabelId = null;
             updateStars();
-            draggables.forEach(d => d.classList.remove('hidden-item'));
+            draggables.forEach(d => {
+                d.classList.remove('hidden-item', 'ring-4', 'ring-yellow-400', 'scale-110');
+            });
             dropZones.forEach(z => {
                 z.classList.remove('filled', 'wrong');
                 z.innerHTML = 'Tarik ke sini';
             });
-            // Acak posisi label kembali setelah direset
-            shuffleLabels();
+            shuffleLabels(); // Acak ulang setiap reset
         }
 
-        // --- STREAMING_CHUNK:Flashcard Logic ---
-        // Penambahan Soal Flashcard Menjadi 10 Fokus Enzim
+        // --- STREAMING_CHUNK:Logika Flashcard... ---
         const flashcardsData = [
             { term: "Enzim Amilase (Ptialin)", def: "Dihasilkan kelenjar ludah dan pankreas. Berfungsi memecah karbohidrat/amilum menjadi glukosa (gula sederhana)." },
             { term: "Enzim Pepsin", def: "Dihasilkan di lambung dari aktivasi pepsinogen. Berfungsi memecah protein kompleks menjadi pepton atau asam amino." },
@@ -954,7 +988,7 @@
         function checkFlashcardCompletion() {
             if (!isFlashcardCompleted && viewedFlashcards.size === flashcardsData.length) {
                 isFlashcardCompleted = true;
-                updateRecallProgress(); // Update bar
+                updateRecallProgress(); // Update Bar
                 Swal.fire({
                     title: 'Bagus Sekali!',
                     text: 'Kamu telah membaca semua materi Flashcard. Sekarang kamu bisa lanjut ke fase Exam jika Drag & Drop sudah selesai!',
@@ -966,7 +1000,7 @@
 
         loadFlashcard();
 
-        // --- STREAMING_CHUNK:Exam & Data Submission Logic ---
+        // --- STREAMING_CHUNK:Logika Ujian (Exam)... ---
         const examQuestions = [
             { type: 'pg', q: "Proses pencernaan makanan yang melibatkan enzim disebut proses pencernaan...", options: ["Mekanik", "Kimiawi", "Biologis", "Fisika"], ans: "Kimiawi" },
             { type: 'pg', q: "Enzim amilase yang terdapat pada air liur berfungsi untuk memecah...", options: ["Protein menjadi asam amino", "Lemak menjadi asam lemak", "Amilum menjadi gula", "Protein menjadi kasein"], ans: "Amilum menjadi gula" },
@@ -996,30 +1030,31 @@
         let timeElapsed = 0;
         let studentName = "";
         let studentClass = "";
-        let studentSchool = ""; // Tambahan variabel sekolah
+        let studentSchool = "";
 
         function startExam() {
             const nameInput = document.getElementById('studentName').value.trim();
             const classInput = document.getElementById('studentClass').value.trim();
             const schoolInput = document.getElementById('studentSchool').value.trim();
-            
+
             if(!nameInput || !classInput || !schoolInput) {
-                Swal.fire('Perhatian', 'Mohon lengkapi Nama, Kelas, dan Nama Sekolah Anda terlebih dahulu!', 'warning');
+                Swal.fire('Perhatian', 'Mohon masukkan Nama, Kelas, dan Asal Sekolah Anda terlebih dahulu!', 'warning');
                 return;
             }
 
-            // Validasi percobaan ujian 1 kali berdasarkan nama dan kelas
+            // Validasi pengerjaan hanya 1 kali
             const studentId = (nameInput + "_" + classInput).toLowerCase().replace(/\s/g, '');
             const hasTakenExam = localStorage.getItem('exam_completed_' + studentId);
             
             if (hasTakenExam) {
-                Swal.fire('Akses Ditolak', 'Maaf, Anda sudah pernah mengerjakan ujian dengan Nama dan Kelas ini. Ujian hanya dapat dilakukan satu kali.', 'error');
+                Swal.fire('Akses Ditolak', 'Maaf, Anda sudah pernah mengerjakan ujian dengan identitas ini. Ujian hanya dapat dilakukan satu kali.', 'error');
                 return;
             }
 
             studentName = nameInput;
             studentClass = classInput;
             studentSchool = schoolInput;
+            
             document.getElementById('exam-intro').style.display = 'none';
             document.getElementById('exam-area').style.display = 'block';
             
@@ -1129,22 +1164,26 @@
         }
 
         function submitExam() {
-            // Validasi: Cegah submit jika masih ada soal yang belum dijawab
-            const hasUnanswered = userAnswers.some(ans => ans === null || ans === '' || (Array.isArray(ans) && ans.length === 0));
-            
-            if (hasUnanswered) {
-                Swal.fire({
-                    title: 'Ujian Belum Selesai!',
-                    text: 'Anda wajib menjawab semua soal sebelum mengumpulkan hasil ujian. Periksa kembali soal yang belum diisi.',
-                    icon: 'warning',
-                    confirmButtonColor: '#10B981'
-                });
-                return; // Membatalkan fungsi submit agar tidak lanjut menghitung skor
+            // Validasi soal kosong
+            let hasEmpty = false;
+            for (let i = 0; i < userAnswers.length; i++) {
+                const ans = userAnswers[i];
+                if (ans === null || 
+                   (Array.isArray(ans) && ans.length === 0) || 
+                   (typeof ans === 'string' && ans.trim() === '')) {
+                    hasEmpty = true;
+                    break;
+                }
+            }
+
+            if (hasEmpty) {
+                Swal.fire('Belum Lengkap!', 'Masih ada soal yang belum Anda jawab. Silakan periksa kembali dan pastikan semua 20 soal terisi.', 'warning');
+                return;
             }
 
             Swal.fire({
                 title: 'Yakin kumpulkan?',
-                text: "Pastikan semua soal telah terjawab.",
+                text: "Pastikan semua soal telah terjawab dengan benar.",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#10B981',
@@ -1200,22 +1239,22 @@
                 scoreDisplay.classList.remove('text-primary'); scoreDisplay.classList.add('text-secondary');
             }
 
+            // Hitung Waktu untuk Spreadsheet
+            let m = Math.floor(timeElapsed / 60).toString().padStart(2, '0');
+            let s = (timeElapsed % 60).toString().padStart(2, '0');
+            let durasi = `${m} Menit ${s} Detik`;
+
             const interval = setInterval(() => {
                 if(count >= finalScore) {
                     clearInterval(interval);
                     scoreDisplay.innerText = finalScore;
                     
-                    // Kunci ujian agar siswa tidak bisa mengerjakan lagi (Simpan di LocalStorage)
+                    // Kunci ujian
                     const studentId = (studentName + "_" + studentClass).toLowerCase().replace(/\s/g, '');
                     localStorage.setItem('exam_completed_' + studentId, 'true');
 
-                    // Format durasi pengerjaan dari timeElapsed
-                    let m = Math.floor(timeElapsed / 60).toString().padStart(2, '0');
-                    let s = (timeElapsed % 60).toString().padStart(2, '0');
-                    let durasiPengerjaan = `${m} Menit ${s} Detik`;
-
-                    // Kirim ke Google Sheet setelah animasi selesai (Kirim Nama, Kelas, Sekolah, Nilai, Waktu Pengerjaan)
-                    sendToGoogleSheet(studentName, studentClass, studentSchool, finalScore, durasiPengerjaan);
+                    // Kirim ke Google Sheet
+                    sendToGoogleSheet(studentName, studentClass, studentSchool, finalScore, durasi);
                 } else {
                     count++;
                     scoreDisplay.innerText = count;
@@ -1223,18 +1262,18 @@
             }, 20);
         }
 
-        // --- Fungsi Kirim Data Ke Google Sheet ---
+        // --- STREAMING_CHUNK:Fungsi Kirim Data Ke Google Sheet ---
         function sendToGoogleSheet(nama, kelas, sekolah, nilai, waktuPengerjaan) {
-            // GANTI URL DI BAWAH DENGAN URL WEB APP GAS ANDA
+            // PASTIKAN GANTI URL DI BAWAH DENGAN URL WEB APP GAS ANDA
             const scriptURL = 'https://script.google.com/macros/s/AKfycbzcs5vzobuTDycUkhgj5lTRoEgPE3vLo6jBLzvWEFdiVUP-CPlmi8hBMLHvxy06UxyO/exec'; 
             
             const statusBox = document.getElementById('sheet-status');
-
+            
             const formData = new FormData();
             formData.append('Waktu', new Date().toLocaleString('id-ID'));
             formData.append('Nama', nama);
             formData.append('Kelas', kelas); 
-            formData.append('Sekolah', sekolah); // Menambahkan Sekolah
+            formData.append('Sekolah', sekolah); 
             formData.append('Nilai', nilai);
             formData.append('Waktu_Pengerjaan', waktuPengerjaan);
 
@@ -1249,12 +1288,13 @@
                         </div>`;
                 })
                 .catch(error => {
+                    // Jika terjadi kegagalan koneksi ke script gas
                     statusBox.className = 'bg-red-50 border border-red-200 text-red-800 p-4 rounded-lg mb-6 flex items-start text-left';
                     statusBox.innerHTML = `
-                        <i class="fa-solid fa-xmark-circle mt-1 mr-3 text-xl"></i>
+                        <i class="fa-solid fa-triangle-exclamation mt-1 mr-3 text-xl"></i>
                         <div>
-                            <h4 class="font-bold">Gagal Mengirim Data</h4>
-                            <p class="text-sm">Pastikan internet Anda lancar. Error: ${error.message}</p>
+                            <h4 class="font-bold">Pengiriman Data Bermasalah</h4>
+                            <p class="text-sm">Nilai Anda sudah tersimpan di perangkat ini. Namun ada kendala saat mengirim ke Server Guru. Pesan: ${error.message}</p>
                         </div>`;
                 });
         }
