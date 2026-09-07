@@ -538,6 +538,11 @@
                     <input class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="studentSchool" type="text" placeholder="Contoh: SMP Negeri 2 Ende">
                 </div>
                 
+                <div class="mb-6 text-left">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="examToken">Token Ujian</label>
+                    <input class="shadow appearance-none border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" id="examToken" type="text" placeholder="Masukkan token ujian...">
+                </div>
+                
                 <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 text-left text-xs text-yellow-800">
                     <p><strong>Info:</strong> Pastikan Anda terkoneksi internet. Nilai akan otomatis dikirimkan ke Guru. <strong>Ujian hanya dapat dilakukan 1 kali.</strong></p>
                 </div>
@@ -1036,9 +1041,16 @@
             const nameInput = document.getElementById('studentName').value.trim();
             const classInput = document.getElementById('studentClass').value.trim();
             const schoolInput = document.getElementById('studentSchool').value.trim();
+            const tokenInput = document.getElementById('examToken').value.trim();
 
-            if(!nameInput || !classInput || !schoolInput) {
-                Swal.fire('Perhatian', 'Mohon masukkan Nama, Kelas, dan Asal Sekolah Anda terlebih dahulu!', 'warning');
+            if(!nameInput || !classInput || !schoolInput || !tokenInput) {
+                Swal.fire('Perhatian', 'Mohon lengkapi Nama, Kelas, Asal Sekolah, dan Token terlebih dahulu!', 'warning');
+                return;
+            }
+
+            // Validasi Token Ujian
+            if (tokenInput.toUpperCase() !== 'GURUKEREN') {
+                Swal.fire('Token Salah', 'Token ujian yang Anda masukkan tidak valid. Silakan periksa kembali.', 'error');
                 return;
             }
 
@@ -1265,7 +1277,7 @@
         // --- STREAMING_CHUNK:Fungsi Kirim Data Ke Google Sheet ---
         function sendToGoogleSheet(nama, kelas, sekolah, nilai, waktuPengerjaan) {
             // PASTIKAN GANTI URL DI BAWAH DENGAN URL WEB APP GAS ANDA
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzcs5vzobuTDycUkhgj5lTRoEgPE3vLo6jBLzvWEFdiVUP-CPlmi8hBMLHvxy06UxyO/exec'; 
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyjnt-bzngce2RQkv9UlmayDFasTaGDf4MeFlrW5eubFdjPg1pO36sinMIDR1f9Bg4i/exec'; 
             
             const statusBox = document.getElementById('sheet-status');
             
